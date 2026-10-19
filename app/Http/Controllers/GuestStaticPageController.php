@@ -30,6 +30,15 @@ class GuestStaticPageController extends Controller
         );
     }
 
+    public function deleteData(Request $request): View
+    {
+        return $this->renderPage(
+            'delete_data',
+            'guest.delete-data',
+            __('Data Deletion'),
+        );
+    }
+
     public function socialPages(Request $request): View
     {
         $links = collect([

@@ -31,6 +31,8 @@ class StaticPages extends Component
 
     public string $terms_of_use_content = '';
 
+    public string $delete_data_content = '';
+
     public string $social_pages_title = '';
 
     public string $social_pages_intro = '';
@@ -65,6 +67,7 @@ class StaticPages extends Component
 
         $this->privacy_policy_content = (string) $this->options->get('privacy_policy_content', '');
         $this->terms_of_use_content = (string) $this->options->get('terms_of_use_content', '');
+        $this->delete_data_content = (string) $this->options->get('delete_data_content', '');
         $this->social_pages_intro = (string) $this->options->get('social_pages_intro', '');
 
         foreach (array_keys(self::SOCIAL_NETWORKS) as $network) {
@@ -80,6 +83,8 @@ class StaticPages extends Component
             'privacy_policy_content' => ['nullable', 'string'],
             'terms_of_use_title' => ['required', 'string', 'max:255'],
             'terms_of_use_content' => ['nullable', 'string'],
+            'delete_data_title' => ['required', 'string', 'max:255'],
+            'delete_data_content' => ['nullable', 'string'],
             'social_pages_title' => ['required', 'string', 'max:255'],
             'social_pages_intro' => ['nullable', 'string', 'max:2000'],
         ];
@@ -125,6 +130,13 @@ class StaticPages extends Component
                 'route_name' => 'guest.terms-of-use',
                 'default_title' => __('Terms of Use'),
                 'description' => __('Public terms page content. You can paste plain text or HTML here.'),
+                'type' => 'html',
+            ],
+            [
+                'key' => 'delete_data',
+                'route_name' => 'guest.delete-data',
+                'default_title' => __('Data Deletion'),
+                'description' => __('Public instructions for removing connected-channel information and deleting a user account.'),
                 'type' => 'html',
             ],
             [

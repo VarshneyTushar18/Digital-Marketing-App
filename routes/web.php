@@ -22,6 +22,7 @@ Route::get('/contact', [GuestMarketingController::class, 'contact'])->name('gues
 Route::get('/blogs/{slug}', [GuestMarketingController::class, 'blogShow'])->name('guest.blog-show');
 Route::get('/privacy-policy', [GuestStaticPageController::class, 'privacyPolicy'])->name('guest.privacy-policy');
 Route::get('/terms-of-use', [GuestStaticPageController::class, 'termsOfUse'])->name('guest.terms-of-use');
+Route::get('/delete-data', [GuestStaticPageController::class, 'deleteData'])->name('guest.delete-data');
 Route::get('/social-pages', [GuestStaticPageController::class, 'socialPages'])->name('guest.social-pages');
 
 Route::middleware('guest')->prefix('auth/login')->group(function (): void {

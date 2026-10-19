@@ -23,6 +23,7 @@
         $pageTabs = [
             ['label' => __('Privacy Policy'), 'route' => 'guest.privacy-policy'],
             ['label' => __('Terms of Use'), 'route' => 'guest.terms-of-use'],
+            ['label' => __('Data Deletion'), 'route' => 'guest.delete-data'],
             ['label' => __('Social Pages'), 'route' => 'guest.social-pages'],
         ];
     @endphp
@@ -133,8 +134,69 @@
             font-size: 1rem;
             line-height: 1.9;
         }
+        .guest-static-content .wrap {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            padding: 0;
+        }
         .guest-static-content > * + * {
             margin-top: 1rem;
+        }
+        .guest-static-content p {
+            margin: 0 0 0.9rem;
+        }
+        .guest-static-content a {
+            color: var(--theme-link-color);
+            text-decoration: underline;
+            text-underline-offset: 0.18em;
+        }
+        .guest-static-content table {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            border-collapse: collapse;
+            margin: 1rem 0 1.25rem;
+            font-size: 0.92rem;
+        }
+        .guest-static-content th,
+        .guest-static-content td {
+            padding: 0.7rem 0.8rem;
+            border: 1px solid rgba(255,255,255,0.12);
+            text-align: left;
+            vertical-align: top;
+        }
+        .guest-static-content th {
+            color: var(--theme-header-text-color);
+            background: rgba(255,255,255,0.04);
+        }
+        .guest-static-content .callout,
+        .guest-static-content .steps {
+            margin: 1rem 0;
+            padding: 1rem 1.2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 1rem;
+            background: rgba(255,255,255,0.035);
+        }
+        .guest-static-content .card {
+            padding: 0;
+            text-align: left;
+        }
+        .guest-static-content .btn {
+            display: inline-block;
+            margin: 0.5rem 0 1rem;
+            padding: 0.7rem 1.2rem;
+            border-radius: 999px;
+            background: var(--theme-link-color);
+            color: var(--theme-inverse-text-color, #111827);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .guest-static-content footer {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.12);
+            font-size: 0.85rem;
         }
         .guest-static-content h1,
         .guest-static-content h2,
