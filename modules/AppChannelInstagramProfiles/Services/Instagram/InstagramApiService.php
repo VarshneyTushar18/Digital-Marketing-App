@@ -123,6 +123,8 @@ class InstagramApiService
                 continue;
             }
 
+            $pageAccessToken = trim((string) data_get($page, 'access_token', ''));
+
             $profiles->push([
                 'id' => (string) $profile['id'],
                 'name' => (string) ($profile['name'] ?? $profile['username']),
@@ -130,7 +132,7 @@ class InstagramApiService
                 'category' => 'Profile',
                 'link' => 'https://www.instagram.com/'.ltrim((string) $profile['username'], '@'),
                 'avatar_url' => (string) ($profile['profile_picture_url'] ?? ''),
-                'access_token' => $accessToken,
+                'access_token' => $pageAccessToken !== '' ? $pageAccessToken : $accessToken,
                 'page_id' => (string) ($page['id'] ?? ''),
                 'page_name' => (string) ($page['name'] ?? ''),
                 'ig_id' => (string) ($profile['ig_id'] ?? ''),

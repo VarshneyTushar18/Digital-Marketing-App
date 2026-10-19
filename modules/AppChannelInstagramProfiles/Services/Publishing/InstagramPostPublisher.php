@@ -297,6 +297,12 @@ class InstagramPostPublisher implements PostPublisher
 
     protected function resolveAccessToken(SocialAccount $account): string
     {
+        $pageToken = trim((string) data_get($account->auth_data, 'profile_payload.page.access_token', ''));
+
+        if ($pageToken !== '') {
+            return $pageToken;
+        }
+
         return trim((string) ($account->access_token
             ?: data_get($account->auth_data, 'user_token', '')));
     }
