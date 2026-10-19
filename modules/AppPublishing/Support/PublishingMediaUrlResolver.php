@@ -35,15 +35,26 @@ class PublishingMediaUrlResolver
 
     public function publicUrlForFile(AppFile $file, int $expiresInMinutes = 360): string
     {
-        if (in_array((string) $file->disk, ['public', 'local'], true)) {
-            return URL::temporarySignedRoute(
-                'portal.files.publish-preview',
-                now()->addMinutes($expiresInMinutes),
-                ['file' => $file]
-            );
+        $disk = (string) $file->disk;
+        $path = trim((string) $file->path);
+
+        if ($disk === 'public' && $path !== '') {
+            $directUrl = $this->storageDriverManager->publicUrl($disk, $path);
+
+            if ($directUrl) {
+                return $this->normalizeAbsoluteUrl($directUrl);
+            }
         }
 
-        $directUrl = $this->storageDriverManager->publicUrl((string) $file->disk, (string) $file->path);
+        if ($disk === 'local' && $path !== '') {
+            $directUrl = $this->storageDriverManager->publicUrl($disk, $path);
+
+            if ($directUrl) {
+                return $this->normalizeAbsoluteUrl($directUrl);
+            }
+        }
+
+        $directUrl = $this->storageDriverManager->publicUrl($disk, $path);
 
         if ($directUrl) {
             return $this->normalizeAbsoluteUrl($directUrl);
