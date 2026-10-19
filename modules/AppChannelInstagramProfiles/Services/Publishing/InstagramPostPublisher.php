@@ -54,12 +54,12 @@ class InstagramPostPublisher implements PostPublisher
                 default => $this->createFeedContainer($igUserId, $accessToken, $mediaAssets, $caption),
             };
 
-            $isSingleStoryImage = $postTo === 'stories'
-                && $mediaAssets->count() === 1
-                && $this->fileIsImage($mediaAssets->first()['file']);
+            $isSingleImagePost = $mediaAssets->count() === 1
+                && $this->fileIsImage($mediaAssets->first()['file'])
+                && in_array($postTo, ['feed', 'stories'], true);
 
-            // Story images usually do not require long polling like videos/reels.
-            if (! $isSingleStoryImage) {
+            // Static images usually do not require long polling like videos/reels.
+            if (! $isSingleImagePost) {
                 $this->waitForContainerReady($creationId, $accessToken);
             }
 

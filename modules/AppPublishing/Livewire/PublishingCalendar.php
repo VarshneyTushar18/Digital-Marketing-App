@@ -1276,31 +1276,7 @@ class PublishingCalendar extends Component
             }
 
             if ($publishImmediately) {
-                try {
-                    PublishScheduledPostJob::dispatchSync($editingPost->id);
-                } catch (\Throwable $exception) {
-                    $editingPost->refresh();
-
-                    $this->addError(
-                        'composer.account_ids',
-                        trim((string) data_get($editingPost->result, 'error', '')) !== ''
-                            ? trim((string) data_get($editingPost->result, 'error', ''))
-                            : trim((string) $exception->getMessage())
-                    );
-
-                    $this->dispatch(
-                        'app-toast',
-                        type: 'danger',
-                        title: __('Publishing failed'),
-                        message: trim((string) data_get($editingPost->result, 'error', '')) !== ''
-                            ? trim((string) data_get($editingPost->result, 'error', ''))
-                            : trim((string) $exception->getMessage()),
-                    );
-
-                    $this->bumpCalendarCacheNonce();
-
-                    return;
-                }
+                PublishScheduledPostJob::dispatch($editingPost->id);
             }
         } else {
             foreach ($selectedAccountIds as $accountId) {
@@ -1392,51 +1368,7 @@ class PublishingCalendar extends Component
         }
 
         foreach ($immediatePostIds as $postId) {
-            try {
-                PublishScheduledPostJob::dispatchSync($postId);
-            } catch (\Throwable $exception) {
-                $failedPost = PublishingPost::query()->find($postId);
-                $errorMessage = trim((string) data_get($failedPost?->result, 'error', ''));
-
-                $this->addError(
-                    'composer.account_ids',
-                    $errorMessage !== '' ? $errorMessage : trim((string) $exception->getMessage())
-                );
-
-                $this->dispatch(
-                    'app-toast',
-                    type: 'danger',
-                    title: __('Publishing failed'),
-                    message: $errorMessage !== '' ? $errorMessage : trim((string) $exception->getMessage()),
-                );
-
-                $this->bumpCalendarCacheNonce();
-
-                return;
-            }
-        }
-
-        if ($publishImmediately) {
-            $immediateFailures = PublishingPost::query()
-                ->whereIn('id', $editingPost ? [$editingPost->id] : $immediatePostIds)
-                ->where('status', PublishingPost::STATUS_FAILED)
-                ->get();
-
-            if ($immediateFailures->isNotEmpty()) {
-                $primaryFailure = $immediateFailures->first();
-                $primaryError = trim((string) data_get($primaryFailure->result, 'error', ''));
-
-                $this->addError(
-                    'composer.account_ids',
-                    $primaryError !== ''
-                        ? $primaryError
-                        : __('Publishing failed for one or more selected channels.')
-                );
-
-                $this->bumpCalendarCacheNonce();
-
-                return;
-            }
+            PublishScheduledPostJob::dispatch($postId);
         }
 
         $this->bumpCalendarCacheNonce();
