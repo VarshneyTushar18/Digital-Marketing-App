@@ -56,7 +56,7 @@ class InstagramPostPublisher implements PostPublisher
 
             $isSingleStoryImage = $postTo === 'stories'
                 && $mediaAssets->count() === 1
-                && (bool) data_get($mediaAssets->first(), 'file.is_image', false);
+                && $this->fileIsImage($mediaAssets->first()['file']);
 
             // Story images usually do not require long polling like videos/reels.
             if (! $isSingleStoryImage) {
@@ -66,7 +66,7 @@ class InstagramPostPublisher implements PostPublisher
             $publishResponse = Http::asForm()
                 ->connectTimeout(15)
                 ->timeout(120)
-                ->retry(2, 700)
+                ->retry(2, 700, null, false)
                 ->post($this->instagram->graphUrl("{$igUserId}/media_publish"), [
                     'creation_id' => $creationId,
                     'access_token' => $accessToken,
@@ -106,7 +106,7 @@ class InstagramPostPublisher implements PostPublisher
             $asset = $mediaAssets->first();
             $file = $asset['file'];
 
-            if ($file->is_image) {
+            if ($this->fileIsImage($file)) {
                 return $this->createMediaContainer($igUserId, $accessToken, [
                     'image_url' => $asset['url'],
                     'caption' => $caption,
@@ -142,7 +142,7 @@ class InstagramPostPublisher implements PostPublisher
             /** @var AppFile $file */
             $file = $asset['file'];
 
-            return $this->createMediaContainer($igUserId, $accessToken, $file->is_image
+            return $this->createMediaContainer($igUserId, $accessToken, $this->fileIsImage($file)
                 ? [
                     'image_url' => $asset['url'],
                     'is_carousel_item' => 'true',
@@ -170,7 +170,7 @@ class InstagramPostPublisher implements PostPublisher
         /** @var array{file:AppFile,url:string} $asset */
         $asset = $mediaAssets->first();
 
-        if ($asset['file']->is_image) {
+        if ($this->fileIsImage($asset['file'])) {
             throw new RuntimeException('Instagram Reels publishing requires a video file.');
         }
 
@@ -197,7 +197,7 @@ class InstagramPostPublisher implements PostPublisher
         /** @var array{file:AppFile,url:string} $asset */
         $asset = $mediaAssets->first();
 
-        return $this->createMediaContainer($igUserId, $accessToken, $asset['file']->is_image
+        return $this->createMediaContainer($igUserId, $accessToken, $this->fileIsImage($asset['file'])
             ? [
                 'media_type' => 'STORIES',
                 'image_url' => $asset['url'],
@@ -210,10 +210,17 @@ class InstagramPostPublisher implements PostPublisher
 
     protected function createMediaContainer(string $igUserId, string $accessToken, array $payload): string
     {
+        logger()->info('instagram.media_container.create', [
+            'ig_user_id' => $igUserId,
+            'media_type' => $payload['media_type'] ?? 'feed_image',
+            'image_url' => $payload['image_url'] ?? null,
+            'video_url' => $payload['video_url'] ?? null,
+        ]);
+
         $response = Http::asForm()
             ->connectTimeout(15)
             ->timeout(180)
-            ->retry(2, 700)
+            ->retry(2, 700, null, false)
             ->post($this->instagram->graphUrl("{$igUserId}/media"), $payload + [
                 'access_token' => $accessToken,
             ]);
@@ -222,7 +229,7 @@ class InstagramPostPublisher implements PostPublisher
         $creationId = trim((string) ($body['id'] ?? ''));
 
         if (! $response->successful() || $creationId === '') {
-            throw new RuntimeException((string) (data_get($body, 'error.message') ?: 'Instagram media container creation failed.'));
+            throw new RuntimeException($this->instagramErrorMessage($body, 'Instagram media container creation failed.'));
         }
 
         return $creationId;
@@ -236,7 +243,7 @@ class InstagramPostPublisher implements PostPublisher
             try {
                 $response = Http::connectTimeout(10)
                     ->timeout(40)
-                    ->retry(1, 400)
+                    ->retry(1, 400, null, false)
                     ->get($this->instagram->graphUrl($creationId), [
                         'fields' => 'status_code,status',
                         'access_token' => $accessToken,
@@ -328,24 +335,82 @@ class InstagramPostPublisher implements PostPublisher
                     ];
                 }
 
-                $url = $this->mediaUrls->firstAbsoluteUrl($item);
+                $url = $this->publishableAbsoluteUrl($item);
                 if (! $url) {
                     return null;
                 }
 
+                $synthetic = new AppFile([
+                    'id' => 0,
+                    'name' => (string) Arr::get($item, 'name', 'media'),
+                    'mime_type' => (string) Arr::get($item, 'mimeType', ''),
+                    'extension' => (string) Arr::get($item, 'extension', ''),
+                    'category' => (string) Arr::get($item, 'category', ''),
+                    'is_image' => (bool) Arr::get($item, 'isImage', false),
+                ]);
+
                 return [
-                    'file' => new AppFile([
-                        'id' => 0,
-                        'name' => (string) Arr::get($item, 'name', 'media'),
-                        'mime_type' => (string) Arr::get($item, 'mimeType', ''),
-                        'category' => (string) Arr::get($item, 'category', ''),
-                        'is_image' => (bool) Arr::get($item, 'isImage', false),
-                    ]),
+                    'file' => $synthetic,
                     'url' => $url,
                 ];
             })
             ->filter()
             ->values();
+    }
+
+    protected function publishableAbsoluteUrl(array $item): ?string
+    {
+        foreach (['url', 'embedUrl', 'previewUrl'] as $key) {
+            $value = trim((string) Arr::get($item, $key, ''));
+
+            if ($value === '' || ! preg_match('#^https?://#i', $value)) {
+                continue;
+            }
+
+            if ($this->isAuthenticatedPreviewUrl($value)) {
+                continue;
+            }
+
+            return $value;
+        }
+
+        return null;
+    }
+
+    protected function isAuthenticatedPreviewUrl(string $url): bool
+    {
+        return str_contains($url, '/portal/files/')
+            && ! str_contains($url, '/publish/');
+    }
+
+    protected function fileIsImage(AppFile $file): bool
+    {
+        if ($file->is_image) {
+            return true;
+        }
+
+        $mime = strtolower(trim((string) $file->mime_type));
+
+        if ($mime !== '' && str_starts_with($mime, 'image/')) {
+            return true;
+        }
+
+        $category = strtolower(trim((string) $file->category));
+
+        if ($category === 'image') {
+            return true;
+        }
+
+        $extension = strtolower(trim((string) $file->extension));
+
+        return in_array($extension, ['jpg', 'jpeg', 'png', 'webp'], true);
+    }
+
+    protected function instagramErrorMessage(?array $body, string $fallback): string
+    {
+        $message = trim((string) data_get($body, 'error.message', ''));
+
+        return $message !== '' ? $message : $fallback;
     }
 
     protected function normalizeFailure(array $payload, string $fallback): array
