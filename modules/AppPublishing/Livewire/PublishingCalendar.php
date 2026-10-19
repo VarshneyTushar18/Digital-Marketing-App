@@ -982,6 +982,10 @@ class PublishingCalendar extends Component
 
     public function saveComposer(string $mode = 'scheduled'): void
     {
+        if ($mode !== 'draft') {
+            $this->resetErrorBag(['composer.account_ids', 'composer.media_items']);
+        }
+
         logger()->info('publishing.saveComposer.hit', [
             'mode' => $mode,
             'schedule_mode' => (string) ($this->composer['schedule_mode'] ?? ''),
@@ -1102,6 +1106,17 @@ class PublishingCalendar extends Component
         $statusKey = $mode === 'draft' ? 'draft' : 'scheduled';
         $requiresApproval = $mode !== 'draft' && ! $this->canCurrentUserPublishDirectly();
         $publishImmediately = $mode !== 'draft' && $scheduleMode === 'immediately' && ! $requiresApproval;
+
+        if ($mode !== 'draft' && $scheduleMode === 'immediately' && $requiresApproval) {
+            logger()->info('publishing.saveComposer.approval_required', [
+                'user_id' => auth()->id(),
+                'team_id' => $this->currentTeamId(),
+            ]);
+        }
+
+        if ($publishImmediately) {
+            set_time_limit(180);
+        }
 
         if ($scheduleMode === 'specific_days_times' && $repeatRule !== 'none' && $repeatUntil === '') {
             $message = __('Please choose when the repeat schedule should stop.');

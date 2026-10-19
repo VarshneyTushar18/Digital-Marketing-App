@@ -30,6 +30,8 @@ class PublishScheduledPostJob implements ShouldQueue
         RecurringPostScheduler $recurringPosts
     ): void
     {
+        set_time_limit(180);
+
         $post = PublishingPost::query()->find($this->postId);
 
         if (! $post || (int) $post->status !== PublishingPost::STATUS_SCHEDULED) {
