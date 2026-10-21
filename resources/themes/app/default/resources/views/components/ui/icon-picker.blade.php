@@ -531,16 +531,31 @@
 
     $initialValue = old($name ?? '', $value ?: $placeholder);
 
-    $usesWireModel = collect($attributes->getAttributes())
-        ->keys()
-        ->contains(fn (string $key): bool => str_starts_with($key, 'wire:model'));
+    $allAttributes = $attributes->getAttributes();
+
+    $modelAttributeKeys = array_values(array_filter(
+        array_keys($allAttributes),
+        fn (string $key): bool => str_starts_with($key, 'wire:model')
+    ));
+
+    $keyAttribute = $attributes->get('wire:key');
+
+    $modelAttributes = new \Illuminate\View\ComponentAttributeBag(
+        \Illuminate\Support\Arr::only($allAttributes, $modelAttributeKeys)
+    );
+
+    $inputAttributes = new \Illuminate\View\ComponentAttributeBag(
+        \Illuminate\Support\Arr::except($allAttributes, array_merge(['class', 'wire:key'], $modelAttributeKeys))
+    );
 @endphp
 
 <x-ui.field :label="$label" :help="$help" :error="$error" {{ $attributes->only('class') }}>
     <div
+        @if ($keyAttribute) wire:key="{{ $keyAttribute }}" @endif
         x-data="{
             search: '',
             icon: @js($initialValue),
+            editing: false,
             icons: @js($normalizedIcons->all()),
             styleOptions: @js($normalizedStyleOptions->all()),
             specialFamilyIcons: @js($specialFamilyIcons),
@@ -548,7 +563,48 @@
             iconName: 'fa-hashtag',
             init() {
                 this.parseIcon(this.icon || '{{ $placeholder }}');
-                this.syncInput(@json($usesWireModel));
+
+                // x-ref targets are only registered once this scope's children are
+                // initialised, so the live value has to be picked up afterwards.
+                setTimeout(() => {
+                    const source = this.$refs.input;
+
+                    if (!source) {
+                        return;
+                    }
+
+                    const current = source.value || source.getAttribute('value') || '';
+
+                    if (current && current !== this.icon) {
+                        this.parseIcon(current);
+                    }
+
+                    this.syncInput(false);
+                    this.observeSource();
+                }, 0);
+            },
+            observeSource() {
+                const source = this.$refs.input;
+
+                if (!source) {
+                    return;
+                }
+
+                this.sourceObserver?.disconnect();
+                this.sourceObserver = new MutationObserver(() => {
+                    const next = source.getAttribute('value') || '';
+
+                    // While the user is typing the server value is always one
+                    // keystroke behind, so it must never overwrite the input.
+                    if (!next || next === this.icon || this.editing) {
+                        return;
+                    }
+
+                    this.parseIcon(next);
+                    source.value = this.resolvedIcon();
+                });
+
+                this.sourceObserver.observe(source, { attributes: true, attributeFilter: ['value'] });
             },
             choose(value) {
                 const nextName = this.shortLabel(value) || this.iconName || 'fa-hashtag';
@@ -559,10 +615,21 @@
                 }
 
                 this.iconName = nextName;
+                this.applyIcon(`${this.iconStyle} ${nextName}`.trim());
                 this.syncInput(true);
             },
+            applyIcon(value) {
+                this.icon = value;
+
+                // Alpine never writes a model value into a focused input, so the
+                // field is updated directly to keep it in sync with the picker.
+                if (this.$refs.visible) {
+                    this.$refs.visible.value = value;
+                }
+            },
             parseIcon(value) {
-                const raw = (value || '').trim();
+                const text = (value || '').toString();
+                const raw = text.trim();
                 const parts = raw.split(/\s+/).filter(Boolean);
                 const styleMatch = this.styleOptions
                     .slice()
@@ -576,12 +643,21 @@
 
                 this.iconStyle = styleMatch ? styleMatch.value : (this.iconStyle || 'fa-solid');
                 this.iconName = iconPart || this.iconName || 'fa-hashtag';
-                this.icon = `${this.iconStyle} ${this.iconName}`.trim();
+
+                // `icon` always mirrors the exact text of the field (trimming it
+                // would swallow a space the user just typed), so typing is never
+                // overwritten by the normalised value.
+                this.icon = text;
+            },
+            resolvedIcon() {
+                if (! (this.icon || '').trim()) {
+                    return '';
+                }
+
+                return `${this.iconStyle} ${this.iconName}`.trim();
             },
             syncInput(shouldDispatch = true) {
                 const nextIcon = `${this.iconStyle} ${this.iconName}`.trim();
-
-                this.icon = nextIcon;
 
                 if (!this.$refs.input) {
                     return;
@@ -602,6 +678,7 @@
                 }
 
                 this.iconStyle = value;
+                this.applyIcon(`${value} ${this.iconName}`.trim());
                 this.syncInput(true);
             },
             filteredIcons() {
@@ -631,14 +708,22 @@
             type="hidden"
             @if ($name) name="{{ $name }}" @endif
             value="{{ $initialValue }}"
-            {{ $attributes->except('class') }}
+            {{ $inputAttributes }}
+            {{ $modelAttributes }}
         >
 
         <div class="flex items-center gap-3">
             <div class="flex h-11 w-14 shrink-0 items-center justify-center rounded-[0.95rem] border shadow-[0_1px_2px_rgba(15,23,42,0.04)]" style="border-color: var(--theme-border-color); background-color: color-mix(in srgb, var(--theme-surface-base) 98%, transparent); color: {{ $previewColor }};">
-                <i x-bind:class="icon || '{{ $placeholder }}'" class="text-lg"></i>
+                <i x-bind:class="resolvedIcon() || '{{ $placeholder }}'" class="text-lg"></i>
             </div>
-            <x-ui.input x-model="icon" x-on:input="parseIcon(icon); syncInput()" class="flex-1" />
+            <x-ui.input
+                x-ref="visible"
+                x-model="icon"
+                x-on:focus="editing = true"
+                x-on:blur="editing = false; applyIcon(resolvedIcon())"
+                x-on:input="parseIcon($event.target.value); syncInput()"
+                class="flex-1"
+            />
         </div>
 
         <x-ui.modal
