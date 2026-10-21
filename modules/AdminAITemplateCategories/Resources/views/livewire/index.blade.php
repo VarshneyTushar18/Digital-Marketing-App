@@ -4,7 +4,7 @@
         formOpen: $wire.entangle('showFormModal').live,
         name: $wire.entangle('form.name'),
         desc: $wire.entangle('form.desc'),
-        icon: $wire.entangle('form.icon'),
+        icon: $wire.entangle('form.icon').live,
         color: $wire.entangle('form.color'),
         status: $wire.entangle('form.status'),
         previewPalette(value) {
@@ -236,7 +236,8 @@
                         </div>
 
                         <x-ui.icon-picker
-                            x-model="icon"
+                            wire:key="ai-template-category-icon-{{ (int) $showFormModal }}-{{ $editingCategory?->id ?? 'new' }}"
+                            wire:model.live="form.icon"
                             :label="__('Icon')"
                             :error="$errors->first('form.icon')"
                             :preview-color="'var(--theme-accent)'"

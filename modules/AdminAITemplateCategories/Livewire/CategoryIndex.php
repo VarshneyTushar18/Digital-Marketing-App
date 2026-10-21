@@ -215,7 +215,7 @@ class CategoryIndex extends Component
         $this->form = [
             'name' => '',
             'desc' => '',
-            'icon' => '',
+            'icon' => 'fa-solid fa-folder-tree',
             'color' => 'primary',
             'status' => '1',
         ];
