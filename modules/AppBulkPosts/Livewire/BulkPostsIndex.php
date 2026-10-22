@@ -82,6 +82,7 @@ class BulkPostsIndex extends Component
 
         ProcessBulkPostBatchJob::dispatchSync($batch->id);
         $batch->refresh();
+        TeamWorkspaceAccess::bumpPublishingCalendarCache(auth()->user());
 
         return redirect()
             ->route('portal.publishing.calendar')

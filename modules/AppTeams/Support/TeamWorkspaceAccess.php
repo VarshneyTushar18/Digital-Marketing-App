@@ -2,6 +2,7 @@
 
 namespace Modules\AppTeams\Support;
 
+use Illuminate\Support\Facades\Cache;
 use Modules\AdminUser\Models\Team;
 use Modules\AdminUser\Models\User;
 use Modules\AppChannels\Models\SocialAccount;
@@ -39,6 +40,46 @@ class TeamWorkspaceAccess
                     ->orWhereHas('members', fn ($memberQuery) => $memberQuery->where('users.id', $user->id));
             })
             ->first();
+    }
+
+    /**
+     * Resolve the team context used by publishing calendar, queue, and bulk imports.
+     * Matches PublishingCalendar::currentTeamId() so posts remain visible in the portal.
+     */
+    public static function currentTeamId(?User $user): ?int
+    {
+        if (! $user) {
+            return null;
+        }
+
+        $team = self::activeTeam($user);
+
+        if ($team) {
+            return (int) $team->id;
+        }
+
+        $ownedTeamId = Team::query()->where('owner_user_id', $user->id)->value('id');
+
+        if ($ownedTeamId) {
+            return (int) $ownedTeamId;
+        }
+
+        $memberTeamId = $user->teams()->value('teams.id');
+
+        return $memberTeamId ? (int) $memberTeamId : null;
+    }
+
+    public static function bumpPublishingCalendarCache(?User $user): void
+    {
+        if (! $user) {
+            return;
+        }
+
+        $ownerId = self::workspaceOwnerUserId($user);
+        $teamId = self::currentTeamId($user) ?? 0;
+        $cacheKey = 'publishing:calendar-version:v1:'.$ownerId.':'.$teamId;
+
+        Cache::forever($cacheKey, (int) Cache::get($cacheKey, 1) + 1);
     }
 
     public static function workspaceOwnerUserId(?User $user): int

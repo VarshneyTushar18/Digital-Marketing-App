@@ -29,7 +29,7 @@ Route::middleware(['web', 'auth', 'verified'])->group(function (): void {
 });
 
 Route::prefix('admin/settings')->middleware(['web', 'auth'])->group(function (): void {
-    Route::redirect('/', settings_default_url());
+    Route::any('/', fn () => redirect()->to(settings_default_url()));
 
     Route::livewire('general', General::class)->name('settings.general');
     Route::livewire('analytics', Analytics::class)->name('settings.analytics');

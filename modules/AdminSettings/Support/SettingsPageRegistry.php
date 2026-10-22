@@ -81,13 +81,18 @@ class SettingsPageRegistry
 
     public function defaultUrl(): string
     {
-        $firstItem = $this->items()[0] ?? null;
-
-        if (is_array($firstItem) && isset($firstItem['route'])) {
-            return $firstItem['route'];
+        foreach ($this->items() as $item) {
+            if (isset($item['route'])) {
+                return $item['route'];
+            }
         }
 
-        return url('/admin/settings');
+        // Never point back at the /admin/settings redirect itself, that loops forever.
+        if (Route::has('settings.general')) {
+            return route('settings.general', absolute: false);
+        }
+
+        return '/admin/settings/general';
     }
 
     protected function normalizeItem(array $item): array
