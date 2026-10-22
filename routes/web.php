@@ -34,7 +34,7 @@ Route::middleware('guest')->prefix('auth/login')->group(function (): void {
         ->name('auth.social.callback');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::livewire('portal/dashboard', Dashboard::class)->name('portal.dashboard');
 });
 
