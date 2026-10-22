@@ -58,7 +58,7 @@ class BulkPostCsvService
         return DB::transaction(function () use ($file, $user, $timezone, $ownerUserId, $lines, $headers, $headerMap, $accounts, $selectedAccountIds, $campaignId, $labelIds, $intervalMinutes, $shortenUrls): BulkPostBatch {
             $batch = BulkPostBatch::query()->create([
                 'owner_user_id' => $user->id,
-                'team_id' => TeamWorkspaceAccess::activeTeam($user)?->id,
+                'team_id' => TeamWorkspaceAccess::currentTeamId($user),
                 'name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) ?: 'Bulk import',
                 'status' => 'draft',
                 'source_filename' => $file->getClientOriginalName(),

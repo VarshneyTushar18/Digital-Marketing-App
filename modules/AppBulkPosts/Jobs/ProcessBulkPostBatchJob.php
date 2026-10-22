@@ -14,6 +14,7 @@ use Modules\AppBulkPosts\Models\BulkPostBatch;
 use Modules\AppBulkPosts\Models\BulkPostRow;
 use Modules\AppChannels\Models\SocialAccount;
 use Modules\AppPublishing\Models\PublishingPost;
+use Modules\AppTeams\Support\TeamWorkspaceAccess;
 
 class ProcessBulkPostBatchJob implements ShouldQueue
 {
@@ -60,6 +61,12 @@ class ProcessBulkPostBatchJob implements ShouldQueue
         $shortenUrls = (bool) data_get($batch->meta, 'shorten_urls', false);
         $fallbackScheduleAt = now();
         $owner = User::query()->find((int) $batch->owner_user_id);
+        $teamId = $batch->team_id ?? TeamWorkspaceAccess::currentTeamId($owner);
+
+        if ($teamId && ! $batch->team_id) {
+            $batch->update(['team_id' => $teamId]);
+        }
+
         $publishableCapabilityKeys = publishable_channel_capability_keys($owner);
 
         $rows = BulkPostRow::query()
@@ -122,7 +129,7 @@ class ProcessBulkPostBatchJob implements ShouldQueue
                     $post = PublishingPost::query()->create([
                         'id_secure' => Str::random(32),
                         'user_id' => $batch->owner_user_id,
-                        'team_id' => $batch->team_id,
+                        'team_id' => $teamId,
                         'campaign' => $campaignId,
                         'labels' => $labelIds,
                         'account_id' => $account->id,

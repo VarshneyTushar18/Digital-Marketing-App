@@ -111,6 +111,7 @@ class AppBulkPostController extends Controller
         ]);
         ProcessBulkPostBatchJob::dispatchSync($batch->id);
         $batch->refresh();
+        TeamWorkspaceAccess::bumpPublishingCalendarCache($request->user());
         $createdPosts = (int) data_get($batch->stats, 'created_posts', 0);
         $failedRows = (int) data_get($batch->stats, 'failed_rows', 0);
 

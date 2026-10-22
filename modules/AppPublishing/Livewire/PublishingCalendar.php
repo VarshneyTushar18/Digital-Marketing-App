@@ -2406,30 +2406,7 @@ class PublishingCalendar extends Component
 
     protected function currentTeamId(): ?int
     {
-        $user = auth()->user();
-
-        if (! $user) {
-            return null;
-        }
-
-        $sessionTeamId = (int) session('portal_team_id', 0);
-
-        if ($sessionTeamId > 0) {
-            $team = Team::query()
-                ->whereKey($sessionTeamId)
-                ->where(function ($query) use ($user) {
-                    $query->where('owner_user_id', $user->id)
-                        ->orWhereHas('members', fn ($memberQuery) => $memberQuery->where('users.id', $user->id));
-                })
-                ->first();
-
-            if ($team) {
-                return $team->id;
-            }
-        }
-
-        return Team::query()->where('owner_user_id', $user->id)->value('id')
-            ?: $user->teams()->value('teams.id');
+        return TeamWorkspaceAccess::currentTeamId(auth()->user());
     }
 
     protected function normalizeCalendarView(?string $view): ?string
