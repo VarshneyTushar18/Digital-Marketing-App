@@ -530,6 +530,10 @@
     ];
 
     $initialValue = old($name ?? '', $value ?: $placeholder);
+
+    $usesWireModel = collect($attributes->getAttributes())
+        ->keys()
+        ->contains(fn (string $key): bool => str_starts_with($key, 'wire:model'));
 @endphp
 
 <x-ui.field :label="$label" :help="$help" :error="$error" {{ $attributes->only('class') }}>
@@ -544,7 +548,7 @@
             iconName: 'fa-hashtag',
             init() {
                 this.parseIcon(this.icon || '{{ $placeholder }}');
-                this.syncInput(false);
+                this.syncInput(@json($usesWireModel));
             },
             choose(value) {
                 const nextName = this.shortLabel(value) || this.iconName || 'fa-hashtag';
@@ -589,7 +593,7 @@
                     return;
                 }
 
-                this.$refs.input.dispatchEvent(new Event('input', { bubbles: true }));
+                this.$refs.input.dispatchEvent(new InputEvent('input', { bubbles: true }));
                 this.$refs.input.dispatchEvent(new Event('change', { bubbles: true }));
             },
             setStyle(value) {
