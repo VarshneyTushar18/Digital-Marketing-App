@@ -24,21 +24,35 @@
         </div>
 
         <div class="px-4 pb-4">
-            <div class="overflow-hidden rounded-[1rem]" style="background-color: rgba(255,255,255,0.04);">
-                <template x-if="previewMediaUrl() !== '' && previewMediaIsVideo()">
-                    <video x-bind:src="previewMediaUrl()" muted playsinline controls class="aspect-[9/16] w-full object-cover"></video>
-                </template>
-                <template x-if="previewMediaUrl() !== '' && !previewMediaIsVideo()">
-                    <img x-bind:src="previewMediaUrl()" alt="{{ __('Preview media') }}" class="aspect-[9/16] w-full object-cover">
-                </template>
-                <template x-if="previewMediaUrl() === ''">
-                    <div class="flex aspect-[9/16] w-full items-center justify-center">
-                        <div class="text-center" style="color: rgba(255,255,255,0.42);">
-                            <i class="fa-solid fa-play text-5xl"></i>
-                            <p class="mt-4 text-sm">{{ __('Video preview') }}</p>
-                        </div>
+            <div class="relative overflow-hidden rounded-[1rem]" style="background-color: rgba(255,255,255,0.04);">
+                <video
+                    x-cloak
+                    x-show="previewMediaUrl() !== '' && previewMediaIsVideo()"
+                    x-bind:src="previewMediaUrl()"
+                    x-bind:key="'preview-video-' + previewMediaUrl()"
+                    muted
+                    playsinline
+                    controls
+                    class="aspect-[9/16] w-full object-cover"
+                ></video>
+                <img
+                    x-cloak
+                    x-show="previewMediaUrl() !== '' && !previewMediaIsVideo()"
+                    x-bind:src="previewMediaUrl()"
+                    x-bind:key="'preview-image-' + previewMediaUrl()"
+                    alt="{{ __('Preview media') }}"
+                    class="aspect-[9/16] w-full object-cover"
+                />
+                <div
+                    x-cloak
+                    x-show="previewMediaUrl() === ''"
+                    class="flex aspect-[9/16] w-full items-center justify-center"
+                >
+                    <div class="text-center" style="color: rgba(255,255,255,0.42);">
+                        <i class="fa-solid fa-play text-5xl"></i>
+                        <p class="mt-4 text-sm">{{ __('Video preview') }}</p>
                     </div>
-                </template>
+                </div>
             </div>
 
             <div class="mt-4 space-y-2">

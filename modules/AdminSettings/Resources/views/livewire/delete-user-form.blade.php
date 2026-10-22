@@ -9,7 +9,7 @@
             {{ __('Delete account') }}
         </x-ui.button>
 
-        <div x-cloak x-show="open" class="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/60 p-4">
+        <div x-cloak x-show="open" class="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-zinc-950/60 p-4 sm:items-center">
             <div class="w-full max-w-lg rounded-[1.75rem] border border-zinc-200 bg-white p-6 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900">
                 <form method="POST" wire:submit="deleteUser" class="space-y-6">
                     <div>

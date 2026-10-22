@@ -703,12 +703,12 @@
             </div>
 
             <template x-teleport="body">
-                <div x-cloak x-show="importModalOpen" class="fixed inset-0 z-[120] flex items-center justify-center p-6" x-on:keydown.escape.window="importModalOpen = false">
+                <div x-cloak x-show="importModalOpen" class="fixed inset-0 z-[120] flex items-end justify-center overflow-y-auto p-0 sm:items-center sm:p-4 md:p-6" x-on:keydown.escape.window="importModalOpen = false">
                     <div class="absolute inset-0 bg-slate-950/45 backdrop-blur-sm" x-on:click="importModalOpen = false"></div>
 
-                    <div x-show="importModalOpen" x-transition.opacity.scale.90 class="relative w-full max-w-2xl">
-                        <div class="rounded-[var(--theme-card-radius,0.9rem)] border border-slate-200 bg-white shadow-[0_30px_80px_-30px_rgba(15,23,42,0.35)] dark:border-slate-800 dark:bg-slate-900">
-                            <div class="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5 dark:border-slate-800">
+                    <div x-show="importModalOpen" x-transition.opacity.scale.90 class="relative flex w-full max-h-[calc(100dvh-1rem)] max-w-2xl flex-col sm:max-h-[calc(100dvh-2rem)]">
+                        <div class="flex max-h-[inherit] min-h-0 flex-col overflow-hidden rounded-t-[var(--theme-card-radius,0.9rem)] border border-slate-200 bg-white shadow-[0_30px_80px_-30px_rgba(15,23,42,0.35)] sm:rounded-[var(--theme-card-radius,0.9rem)] dark:border-slate-800 dark:bg-slate-900">
+                            <div class="flex shrink-0 items-start justify-between gap-4 border-b border-slate-200 px-6 py-5 dark:border-slate-800">
                                 <div>
                                     <h3 class="text-lg font-semibold text-slate-950 dark:text-white">{{ __('Import frontend theme JSON') }}</h3>
                                     <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ __('Paste a JSON export to restore guest theme colors, typography, and layout settings.') }}</p>
@@ -718,7 +718,7 @@
                                 </button>
                             </div>
 
-                            <div class="px-6 py-5">
+                            <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 py-5">
                                 <x-ui.textarea
                                     form="frontend-theme-form"
                                     name="frontend_import_json"
@@ -728,7 +728,7 @@
                                 >{{ old('frontend_import_json') }}</x-ui.textarea>
                             </div>
 
-                            <div class="border-t border-slate-200 px-6 py-4 dark:border-slate-800">
+                            <div class="shrink-0 border-t border-slate-200 px-6 py-4 dark:border-slate-800">
                                 <div class="flex justify-end gap-3">
                                     <x-ui.button type="button" variant="outline" x-on:click="importModalOpen = false">
                                         {{ __('Cancel') }}

@@ -77,11 +77,11 @@
                 x-cloak
                 x-data="{ open: $wire.entangle('showModal') }"
                 x-show="open"
-                class="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/60 p-4"
+                class="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-zinc-950/60 p-0 sm:items-center sm:p-4"
                 x-on:keydown.escape.window="$wire.closeModal()"
             >
-                <div class="w-full max-w-2xl rounded-[1.75rem] border border-zinc-200 bg-white p-6 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900">
-                    <div class="space-y-6">
+                <div class="flex max-h-[calc(100dvh-1rem)] w-full max-w-2xl flex-col overflow-hidden rounded-t-[1.75rem] border border-zinc-200 bg-white shadow-2xl sm:max-h-[calc(100dvh-2rem)] sm:rounded-[1.75rem] dark:border-zinc-800 dark:bg-zinc-900">
+                    <div class="min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain p-6">
                         <div class="flex flex-col items-center space-y-4">
                             <div class="flex h-20 w-20 items-center justify-center rounded-full border border-zinc-200 bg-zinc-100 text-sm font-semibold text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
                                 QR

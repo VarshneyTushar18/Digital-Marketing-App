@@ -752,7 +752,7 @@
         <div
             x-cloak
             x-show="pickerOpen"
-            class="fixed inset-0 z-[120] flex items-center justify-center px-4 py-6 sm:px-6"
+            class="fixed inset-0 z-[120] flex items-end justify-center overflow-y-auto px-4 py-4 sm:items-center sm:px-6 sm:py-6"
             x-on:keydown.escape.window="pickerOpen = false"
         >
             <div class="absolute inset-0 bg-white/60 dark:bg-slate-950/60" x-on:click="pickerOpen = false"></div>

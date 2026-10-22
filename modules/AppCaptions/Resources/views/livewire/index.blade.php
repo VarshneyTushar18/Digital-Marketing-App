@@ -162,7 +162,7 @@
                                         <div
                                             x-cloak
                                             x-show="confirmDeleteOpen"
-                                            class="fixed inset-0 z-[120] flex items-center justify-center p-6"
+                                            class="fixed inset-0 z-[120] flex items-end justify-center overflow-y-auto p-4 sm:items-center sm:p-6"
                                             x-on:keydown.escape.window="confirmDeleteOpen = false"
                                         >
                                             <div class="absolute inset-0 bg-white/55 backdrop-blur-[6px] dark:bg-slate-950/55" x-on:click="confirmDeleteOpen = false"></div>
