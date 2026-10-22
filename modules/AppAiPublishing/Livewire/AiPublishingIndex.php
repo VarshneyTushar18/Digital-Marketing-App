@@ -113,13 +113,43 @@ class AiPublishingIndex extends Component
             'last_processed_at' => now(),
         ]);
 
-        app()->call([
-            new ProcessAiPublishingRunJob((int) $run->id, true),
-            'handle',
-        ]);
+        try {
+            app()->call([
+                new ProcessAiPublishingRunJob((int) $run->id, true),
+                'handle',
+            ]);
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            $run->refresh();
+            $this->syncPublishingCalendarCache();
+
+            session()->flash(
+                'error',
+                __('AI publishing failed: :message', [
+                    'message' => (string) data_get(
+                        $run->stats,
+                        'last_error_message',
+                        $exception->getMessage()
+                    ),
+                ])
+            );
+
+            return;
+        }
 
         $run->refresh();
         $this->syncPublishingCalendarCache();
+
+        if ((string) $run->status === 'failed') {
+            session()->flash(
+                'error',
+                (string) data_get($run->stats, 'last_error_message')
+                    ?: __('AI publishing failed. Check the run logs for details.')
+            );
+
+            return;
+        }
 
         session()->flash('status', __('Run now finished. The generated post was sent for immediate publishing.'));
     }
