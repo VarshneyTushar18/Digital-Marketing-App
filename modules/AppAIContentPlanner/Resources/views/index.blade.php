@@ -54,7 +54,7 @@
                                     x-cloak
                                     x-show="confirmDelete"
                                     x-transition.opacity
-                                    class="fixed inset-0 z-[140] flex items-center justify-center bg-slate-950/45 px-4"
+                                    class="fixed inset-0 z-[140] flex items-end justify-center overflow-y-auto bg-slate-950/45 px-4 py-4 sm:items-center"
                                 >
                                     <div
                                         x-show="confirmDelete"

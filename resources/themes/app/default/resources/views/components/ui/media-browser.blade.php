@@ -1794,7 +1794,7 @@
             x-cloak
             x-show="deleteConfirmOpen"
             x-transition.opacity
-            class="fixed inset-0 z-[120] flex items-center justify-center p-4"
+            class="fixed inset-0 z-[120] flex items-end justify-center overflow-y-auto p-4 sm:items-center"
             x-on:keydown.escape.window="deleteConfirmOpen = false; pendingDeleteItem = null"
         >
             <div class="absolute inset-0 bg-black/25 backdrop-blur-[2px]" x-on:click="deleteConfirmOpen = false; pendingDeleteItem = null"></div>

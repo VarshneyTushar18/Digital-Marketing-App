@@ -45,21 +45,35 @@
                 x-text="(String(localPreviewCaption || '').trim() !== '') ? localPreviewCaption : @js($previewCaption)"
             >{{ $previewCaption }}</p>
 
-            <div class="mt-3 overflow-hidden rounded-[1rem] border" style="border-color: rgba(15,23,42,0.08); background-color: #f8fafc;">
-                <template x-if="previewMediaUrl() !== '' && previewMediaIsVideo()">
-                    <video x-bind:src="previewMediaUrl()" muted playsinline controls class="aspect-[1.15/1] w-full object-cover"></video>
-                </template>
-                <template x-if="previewMediaUrl() !== '' && !previewMediaIsVideo()">
-                    <img x-bind:src="previewMediaUrl()" alt="{{ __('Preview media') }}" class="aspect-[1.15/1] w-full object-cover">
-                </template>
-                <template x-if="previewMediaUrl() === ''">
-                    <div class="flex aspect-[1.15/1] w-full items-center justify-center">
-                        <div class="text-center" style="color: #94a3b8;">
-                            <i class="fa-solid fa-image text-6xl"></i>
-                            <p class="mt-4 text-sm">{{ __('Tweet preview') }}</p>
-                        </div>
+            <div class="relative mt-3 overflow-hidden rounded-[1rem] border" style="border-color: rgba(15,23,42,0.08); background-color: #f8fafc;">
+                <video
+                    x-cloak
+                    x-show="previewMediaUrl() !== '' && previewMediaIsVideo()"
+                    x-bind:src="previewMediaUrl()"
+                    x-bind:key="'preview-video-' + previewMediaUrl()"
+                    muted
+                    playsinline
+                    controls
+                    class="aspect-[1.15/1] w-full object-cover"
+                ></video>
+                <img
+                    x-cloak
+                    x-show="previewMediaUrl() !== '' && !previewMediaIsVideo()"
+                    x-bind:src="previewMediaUrl()"
+                    x-bind:key="'preview-image-' + previewMediaUrl()"
+                    alt="{{ __('Preview media') }}"
+                    class="aspect-[1.15/1] w-full object-cover"
+                />
+                <div
+                    x-cloak
+                    x-show="previewMediaUrl() === ''"
+                    class="flex aspect-[1.15/1] w-full items-center justify-center"
+                >
+                    <div class="text-center" style="color: #94a3b8;">
+                        <i class="fa-solid fa-image text-6xl"></i>
+                        <p class="mt-4 text-sm">{{ __('Tweet preview') }}</p>
                     </div>
-                </template>
+                </div>
             </div>
         </div>
 

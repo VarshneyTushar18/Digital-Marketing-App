@@ -1833,7 +1833,7 @@
             <div
                 x-cloak
                 x-show="dayPostsModalOpen"
-                class="fixed inset-0 z-[118] flex items-center justify-center p-4 sm:p-6"
+                class="fixed inset-0 z-[118] flex items-end justify-center overflow-y-auto p-4 sm:items-center sm:p-6"
                 x-on:keydown.escape.window="closeDayPostsModal()"
             >
                 <div class="absolute inset-0 bg-white/55 backdrop-blur-[6px] dark:bg-slate-950/55" x-on:click="closeDayPostsModal()"></div>
@@ -2059,7 +2059,7 @@
             <div
                 x-cloak
                 x-show="dragMoveModalOpen"
-                class="fixed inset-0 z-[119] flex items-center justify-center p-4 sm:p-6"
+                class="fixed inset-0 z-[119] flex items-end justify-center overflow-y-auto p-4 sm:items-center sm:p-6"
                 x-on:keydown.escape.window="closeMovePostDialog()"
             >
                 <div class="absolute inset-0 bg-white/55 backdrop-blur-[6px] dark:bg-slate-950/55" x-on:click="closeMovePostDialog()"></div>
@@ -2138,7 +2138,7 @@
             <div
                 x-cloak
                 x-show="confirmDeleteOpen"
-                class="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6"
+                class="fixed inset-0 z-[120] flex items-end justify-center overflow-y-auto p-4 sm:items-center sm:p-6"
                 x-on:keydown.escape.window="closeDeleteDialog()"
             >
                 <div class="absolute inset-0 bg-white/55 backdrop-blur-[6px] dark:bg-slate-950/55" x-on:click="closeDeleteDialog()"></div>
@@ -2204,7 +2204,7 @@
 
     @if ($postPreviewOpen && $postPreviewAccount)
     <div
-        class="fixed inset-0 z-[130] flex items-center justify-center p-4 sm:p-6"
+        class="fixed inset-0 z-[130] flex items-end justify-center overflow-y-auto p-4 sm:items-center sm:p-6"
         x-data="{
             localPreviewCaption: @js((string) ($postPreviewComposer['caption'] ?? '')),
             localPreviewMediaItems: @js(collect((array) ($postPreviewComposer['media_items'] ?? []))->values()->all()),
@@ -2516,7 +2516,7 @@
                             <div
                                 x-cloak
                                 x-show="saveCaptionOpen"
-                                class="fixed inset-0 z-[165] flex items-center justify-center p-6"
+                                class="fixed inset-0 z-[165] flex items-end justify-center overflow-y-auto p-0 sm:items-center sm:p-4 md:p-6"
                                 x-on:keydown.escape.window="saveCaptionOpen = false"
                             >
                                 <div class="absolute inset-0 bg-slate-950/45 backdrop-blur-[4px]" x-on:click="saveCaptionOpen = false"></div>
@@ -2524,10 +2524,10 @@
                                 <div
                                     x-show="saveCaptionOpen"
                                     x-transition.opacity.scale.95
-                                    class="relative w-full max-w-xl"
+                                    class="relative flex w-full max-h-[calc(100dvh-1rem)] max-w-xl flex-col sm:max-h-[calc(100dvh-2rem)]"
                                 >
-                                    <div class="overflow-hidden rounded-[1.2rem] border shadow-[0_32px_90px_-36px_rgba(15,23,42,0.42)]" style="border-color: rgba(var(--theme-border-color-rgb), 0.68); background-color: var(--theme-surface-base);">
-                                        <div class="border-b px-5 py-4" style="border-color: rgba(var(--theme-border-color-rgb), 0.68);">
+                                    <div class="flex max-h-[inherit] min-h-0 flex-col overflow-hidden rounded-t-[1.2rem] border shadow-[0_32px_90px_-36px_rgba(15,23,42,0.42)] sm:rounded-[1.2rem]" style="border-color: rgba(var(--theme-border-color-rgb), 0.68); background-color: var(--theme-surface-base);">
+                                        <div class="shrink-0 border-b px-5 py-4" style="border-color: rgba(var(--theme-border-color-rgb), 0.68);">
                                             <div class="flex items-start justify-between gap-4">
                                                 <div>
                                                     <p class="text-[11px] font-semibold uppercase tracking-[0.22em]" style="color: var(--theme-muted-text-color);">{{ __('Caption Library') }}</p>
@@ -2541,7 +2541,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="space-y-4 px-5 py-5">
+                                        <div class="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-5 py-5">
                                             <x-ui.input
                                                 wire:model.defer="composer.caption_library_name"
                                                 :label="__('Caption name')"
@@ -2559,7 +2559,7 @@
                                             </x-ui.select>
                                         </div>
 
-                                        <div class="border-t px-5 py-4" style="border-color: rgba(var(--theme-border-color-rgb), 0.68); background-color: color-mix(in srgb, var(--theme-surface-overlay) 96%, transparent);">
+                                        <div class="shrink-0 border-t px-5 py-4" style="border-color: rgba(var(--theme-border-color-rgb), 0.68); background-color: color-mix(in srgb, var(--theme-surface-overlay) 96%, transparent);">
                                             <div class="flex items-center justify-end gap-3">
                                                 <x-ui.button type="button" variant="outline" x-on:click="saveCaptionOpen = false">
                                                     {{ __('Cancel') }}
@@ -3199,7 +3199,7 @@
                                 @php($previewProvider = $providerCardsByKey->get((string) $previewAccount->provider_key, []))
                                 @php($previewView = app(\Modules\AppPublishing\Support\PublishingPreviewRegistry::class)->get((string) $previewAccount->provider_key, 'apppublishing::livewire.partials.network-preview-generic'))
                                 <div
-                                    wire:key="desktop-preview-{{ $previewAccount->id }}-{{ $previewAccount->provider_key }}"
+                                    wire:key="desktop-preview-{{ $previewAccount->id }}-{{ $previewAccount->provider_key }}-{{ (int) ($composer['media_refresh_token'] ?? 0) }}"
                                     x-cloak
                                     x-show="String(activePreviewAccountId || '') === '{{ (string) $previewAccount->id }}'"
                                     class="flex w-full justify-center"
@@ -3339,7 +3339,7 @@
                                 @php($previewProvider = $providerCardsByKey->get((string) $previewAccount->provider_key, []))
                                 @php($previewView = app(\Modules\AppPublishing\Support\PublishingPreviewRegistry::class)->get((string) $previewAccount->provider_key, 'apppublishing::livewire.partials.network-preview-generic'))
                                 <div
-                                    wire:key="mobile-preview-{{ $previewAccount->id }}-{{ $previewAccount->provider_key }}"
+                                    wire:key="mobile-preview-{{ $previewAccount->id }}-{{ $previewAccount->provider_key }}-{{ (int) ($composer['media_refresh_token'] ?? 0) }}"
                                     x-cloak
                                     x-show="String(activePreviewAccountId || '') === '{{ (string) $previewAccount->id }}'"
                                     class="flex w-full justify-center"

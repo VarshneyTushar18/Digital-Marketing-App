@@ -52,10 +52,11 @@
                 <div
                     x-cloak
                     x-show="open"
-                    class="fixed inset-0 z-[220] flex items-center justify-center bg-slate-950/60 p-4"
+                    class="fixed inset-0 z-[220] flex items-end justify-center overflow-y-auto bg-slate-950/60 p-0 sm:items-center sm:p-4"
                 >
-                    <div class="w-full max-w-4xl overflow-hidden rounded-[1.9rem] border shadow-[0_40px_120px_-40px_rgba(15,23,42,0.45)]" style="border-color: rgba(var(--theme-accent-rgb), 0.12); background: var(--theme-surface-base);">
-                        <div class="grid min-h-[560px] lg:grid-cols-[380px_minmax(0,1fr)]">
+                    <div class="flex max-h-[calc(100dvh-1rem)] w-full max-w-4xl flex-col overflow-hidden rounded-t-[1.9rem] border shadow-[0_40px_120px_-40px_rgba(15,23,42,0.45)] sm:max-h-[calc(100dvh-2rem)] sm:rounded-[1.9rem]" style="border-color: rgba(var(--theme-accent-rgb), 0.12); background: var(--theme-surface-base);">
+                        <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+                        <div class="grid lg:grid-cols-[380px_minmax(0,1fr)]">
                             <div class="relative overflow-hidden px-7 py-7" style="background:
                                 radial-gradient(circle at top left, rgba(var(--theme-accent-rgb), 0.22), transparent 36%),
                                 linear-gradient(180deg, rgba(var(--theme-accent-rgb), 0.08) 0%, rgba(var(--theme-accent-rgb), 0.03) 100%);">
@@ -257,6 +258,7 @@
                                     @endif
                                 </div>
                             </div>
+                        </div>
                         </div>
                     </div>
                 </div>

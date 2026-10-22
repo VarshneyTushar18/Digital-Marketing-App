@@ -304,7 +304,7 @@
     </template>
 
     <template x-teleport="body">
-        <div x-cloak x-show="dialogOpen" class="fixed inset-0 z-[140] flex items-center justify-center p-4 sm:p-6" x-on:keydown.escape.window="closeDialog()">
+        <div x-cloak x-show="dialogOpen" class="fixed inset-0 z-[140] flex items-end justify-center overflow-y-auto p-0 sm:items-center sm:p-4 md:p-6" x-on:keydown.escape.window="closeDialog()">
             <div class="absolute inset-0 bg-white/55 backdrop-blur-[6px] dark:bg-slate-950/55" x-on:click="closeDialog()"></div>
             <div x-show="dialogOpen" x-transition.opacity.scale.90 class="relative w-full max-w-4xl">
                 <div class="overflow-hidden rounded-[1.2rem] border shadow-[0_32px_80px_-34px_rgba(15,23,42,0.32)]" style="border-color: color-mix(in srgb, var(--theme-border-color) 58%, transparent); background-color: var(--theme-surface-overlay);">

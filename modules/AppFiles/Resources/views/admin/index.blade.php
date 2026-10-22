@@ -2427,14 +2427,14 @@
         <div
             x-cloak
             x-show="newFolderDialogOpen"
-            class="fixed inset-0 z-[120] flex items-center justify-center p-6"
+            class="fixed inset-0 z-[120] flex items-end justify-center overflow-y-auto p-4 sm:items-center sm:p-6"
             x-on:keydown.escape.window="closeNewFolderDialog()"
         >
             <div class="absolute inset-0 bg-white/55 backdrop-blur-[6px] dark:bg-slate-950/55" x-on:click="closeNewFolderDialog()"></div>
 
-            <div x-show="newFolderDialogOpen" x-transition.opacity.scale.90 class="relative w-full max-w-[26rem]" x-on:click.stop>
-                <div class="overflow-hidden rounded-[1.15rem] border shadow-[0_32px_80px_-34px_rgba(15,23,42,0.32)]" style="border-color: color-mix(in srgb, var(--theme-border-color) 58%, transparent); background-color: var(--theme-surface-overlay);">
-                    <div class="flex items-start justify-between gap-4 border-b px-5 py-4 sm:px-6 sm:py-5" style="border-color: color-mix(in srgb, var(--theme-border-color) 52%, transparent);">
+            <div x-show="newFolderDialogOpen" x-transition.opacity.scale.90 class="relative flex w-full max-h-[calc(100dvh-1rem)] max-w-[26rem] flex-col sm:max-h-[calc(100dvh-2rem)]" x-on:click.stop>
+                <div class="flex max-h-[inherit] min-h-0 flex-col overflow-hidden rounded-[1.15rem] border shadow-[0_32px_80px_-34px_rgba(15,23,42,0.32)]" style="border-color: color-mix(in srgb, var(--theme-border-color) 58%, transparent); background-color: var(--theme-surface-overlay);">
+                    <div class="flex shrink-0 items-start justify-between gap-4 border-b px-5 py-4 sm:px-6 sm:py-5" style="border-color: color-mix(in srgb, var(--theme-border-color) 52%, transparent);">
                         <div class="min-w-0">
                             <h3 class="text-[1.05rem] font-semibold tracking-[-0.02em] text-slate-950 dark:text-white">{{ __('Create Folder') }}</h3>
                             <p class="mt-2 text-[15px] leading-7 text-slate-500 dark:text-slate-400">{{ __('Create a new folder inside the current owner workspace.') }}</p>
@@ -2445,7 +2445,7 @@
                         </button>
                     </div>
 
-                    <div class="px-5 py-4 sm:px-6 sm:py-5">
+                    <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6 sm:py-5">
                         <div class="space-y-4">
                             @if ($owner === '')
                                 <x-ui.select x-model="newFolderOwner" name="owner_user_id" :label="__('Owner')" :error="$errors->first('owner_user_id')">
@@ -2459,7 +2459,7 @@
                             <x-ui.input x-model="newFolderNote" name="note" :label="__('Note')" :error="$errors->first('note')" />
                             <div class="space-y-3">
                                 <p class="text-sm font-medium" style="color: var(--theme-header-text-color);">{{ __('Parent folder') }}</p>
-                                <div class="overflow-hidden rounded-[1rem] border" style="border-color: rgba(var(--theme-border-color-rgb),0.68); background: var(--theme-surface-soft);">
+                                <div class="max-h-[min(40vh,16rem)] overflow-y-auto overscroll-contain rounded-[1rem] border" style="border-color: rgba(var(--theme-border-color-rgb),0.68); background: var(--theme-surface-soft);">
                                     <label class="flex cursor-pointer items-center gap-3 border-b px-4 py-3 text-sm" style="border-color: rgba(var(--theme-border-color-rgb),0.68); color: var(--theme-header-text-color);">
                                         <input type="radio" x-model="newFolderParent" value="" class="h-4 w-4">
                                         <span>{{ __('Root folder') }}</span>
@@ -2472,13 +2472,13 @@
                                     @endforeach
                                 </div>
                             </div>
-                            <div class="flex justify-end">
-                                <x-ui.button type="button" x-on:click.prevent="confirmCreateFolder()" x-bind:disabled="creatingFolder">
-                                    <span x-show="!creatingFolder">{{ __('Create Folder') }}</span>
-                                    <span x-show="creatingFolder">{{ __('Creating...') }}</span>
-                                </x-ui.button>
-                            </div>
                         </div>
+                    </div>
+                    <div class="flex shrink-0 justify-end border-t px-5 py-4 sm:px-6" style="border-color: color-mix(in srgb, var(--theme-border-color) 52%, transparent);">
+                        <x-ui.button type="button" x-on:click.prevent="confirmCreateFolder()" x-bind:disabled="creatingFolder">
+                            <span x-show="!creatingFolder">{{ __('Create Folder') }}</span>
+                            <span x-show="creatingFolder">{{ __('Creating...') }}</span>
+                        </x-ui.button>
                     </div>
                 </div>
             </div>
@@ -2487,14 +2487,14 @@
         <div
             x-cloak
             x-show="editFolderDialogOpen"
-            class="fixed inset-0 z-[120] flex items-center justify-center p-6"
+            class="fixed inset-0 z-[120] flex items-end justify-center overflow-y-auto p-4 sm:items-center sm:p-6"
             x-on:keydown.escape.window="closeEditFolderDialog()"
         >
             <div class="absolute inset-0 bg-white/55 backdrop-blur-[6px] dark:bg-slate-950/55" x-on:click="closeEditFolderDialog()"></div>
 
-            <div x-show="editFolderDialogOpen" x-transition.opacity.scale.90 class="relative w-full max-w-[26rem]" x-on:click.stop>
-                <div class="overflow-hidden rounded-[1.15rem] border shadow-[0_32px_80px_-34px_rgba(15,23,42,0.32)]" style="border-color: color-mix(in srgb, var(--theme-border-color) 58%, transparent); background-color: var(--theme-surface-overlay);">
-                    <div class="flex items-start justify-between gap-4 border-b px-5 py-4 sm:px-6 sm:py-5" style="border-color: color-mix(in srgb, var(--theme-border-color) 52%, transparent);">
+            <div x-show="editFolderDialogOpen" x-transition.opacity.scale.90 class="relative flex w-full max-h-[calc(100dvh-1rem)] max-w-[26rem] flex-col sm:max-h-[calc(100dvh-2rem)]" x-on:click.stop>
+                <div class="flex max-h-[inherit] min-h-0 flex-col overflow-hidden rounded-[1.15rem] border shadow-[0_32px_80px_-34px_rgba(15,23,42,0.32)]" style="border-color: color-mix(in srgb, var(--theme-border-color) 58%, transparent); background-color: var(--theme-surface-overlay);">
+                    <div class="flex shrink-0 items-start justify-between gap-4 border-b px-5 py-4 sm:px-6 sm:py-5" style="border-color: color-mix(in srgb, var(--theme-border-color) 52%, transparent);">
                         <div class="min-w-0">
                             <h3 class="text-[1.05rem] font-semibold tracking-[-0.02em] text-slate-950 dark:text-white">{{ __('Edit folder') }}</h3>
                             <p class="mt-2 text-[15px] leading-7 text-slate-500 dark:text-slate-400">{{ __('Rename this folder or update its note.') }}</p>
@@ -2505,17 +2505,17 @@
                         </button>
                     </div>
 
-                    <div class="px-5 py-4 sm:px-6 sm:py-5">
+                    <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6 sm:py-5">
                         <div class="space-y-4">
                             <x-ui.input x-model="editFolderName" data-admin-edit-folder-name name="edit_name" :label="__('Folder name')" :error="$errors->first('edit_name')" required />
                             <x-ui.input x-model="editFolderNote" name="edit_note" :label="__('Note')" :error="$errors->first('edit_note')" />
-                            <div class="flex justify-end">
-                                <x-ui.button type="button" x-on:click.prevent="confirmUpdateFolder()" x-bind:disabled="updatingFolder">
-                                    <span x-show="!updatingFolder">{{ __('Save changes') }}</span>
-                                    <span x-show="updatingFolder">{{ __('Saving...') }}</span>
-                                </x-ui.button>
-                            </div>
                         </div>
+                    </div>
+                    <div class="flex shrink-0 justify-end border-t px-5 py-4 sm:px-6" style="border-color: color-mix(in srgb, var(--theme-border-color) 52%, transparent);">
+                        <x-ui.button type="button" x-on:click.prevent="confirmUpdateFolder()" x-bind:disabled="updatingFolder">
+                            <span x-show="!updatingFolder">{{ __('Save changes') }}</span>
+                            <span x-show="updatingFolder">{{ __('Saving...') }}</span>
+                        </x-ui.button>
                     </div>
                 </div>
             </div>
@@ -2525,7 +2525,7 @@
             <div
                 x-cloak
                 x-show="deleteDialogOpen"
-                class="fixed inset-0 z-[120] flex items-center justify-center p-6"
+                class="fixed inset-0 z-[120] flex items-end justify-center overflow-y-auto p-4 sm:items-center sm:p-6"
                 x-on:keydown.escape.window="closeDeleteDialog()"
             >
                 <div class="absolute inset-0 bg-white/55 backdrop-blur-[6px] dark:bg-slate-950/55" x-on:click="closeDeleteDialog()"></div>
@@ -2566,7 +2566,7 @@
             <div
                 x-cloak
                 x-show="playVideoDialogOpen"
-                class="fixed inset-0 z-[120] flex items-center justify-center p-6"
+                class="fixed inset-0 z-[120] flex items-end justify-center overflow-y-auto p-4 sm:items-center sm:p-6"
                 x-on:keydown.escape.window="playVideoDialogOpen = false"
             >
                 <div class="absolute inset-0 bg-white/55 backdrop-blur-[6px] dark:bg-slate-950/55" x-on:click="playVideoDialogOpen = false"></div>
@@ -2597,7 +2597,7 @@
             <div
                 x-cloak
                 x-show="uploadUrlDialogOpen"
-                class="fixed inset-0 z-[120] flex items-center justify-center p-6"
+                class="fixed inset-0 z-[120] flex items-end justify-center overflow-y-auto p-4 sm:items-center sm:p-6"
                 x-on:keydown.escape.window="uploadUrlDialogOpen = false"
             >
                 <div class="absolute inset-0 bg-white/55 backdrop-blur-[6px] dark:bg-slate-950/55" x-on:click="uploadUrlDialogOpen = false"></div>

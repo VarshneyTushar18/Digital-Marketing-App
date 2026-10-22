@@ -162,14 +162,14 @@
     <div
         x-cloak
         x-show="formOpen"
-        class="fixed inset-0 z-[120] flex items-center justify-center p-6"
+        class="fixed inset-0 z-[120] flex items-end justify-center overflow-y-auto p-0 sm:items-center sm:p-4 md:p-6"
         x-on:keydown.escape.window="$wire.closeFormModal()"
     >
         <div class="absolute inset-0 bg-white/55 backdrop-blur-[6px] dark:bg-slate-950/55" x-on:click="$wire.closeFormModal()"></div>
 
-        <div x-show="formOpen" x-transition.opacity.scale.90 class="relative w-full max-w-4xl">
-            <div class="overflow-hidden rounded-[1.15rem] border shadow-[0_32px_80px_-34px_rgba(15,23,42,0.32)]" style="border-color: color-mix(in srgb, var(--theme-border-color) 58%, transparent); background-color: var(--theme-surface-overlay);">
-                <div class="flex items-start justify-between gap-4 border-b px-5 py-4 sm:px-6 sm:py-5" style="border-color: color-mix(in srgb, var(--theme-border-color) 52%, transparent);">
+        <div x-show="formOpen" x-transition.opacity.scale.90 class="relative flex w-full max-h-[calc(100dvh-1rem)] max-w-4xl flex-col sm:max-h-[calc(100dvh-2rem)]">
+            <div class="flex max-h-[inherit] min-h-0 flex-col overflow-hidden rounded-t-[1.15rem] border shadow-[0_32px_80px_-34px_rgba(15,23,42,0.32)] sm:rounded-[1.15rem]" style="border-color: color-mix(in srgb, var(--theme-border-color) 58%, transparent); background-color: var(--theme-surface-overlay);">
+                <div class="flex shrink-0 items-start justify-between gap-4 border-b px-5 py-4 sm:px-6 sm:py-5" style="border-color: color-mix(in srgb, var(--theme-border-color) 52%, transparent);">
                     <div class="min-w-0">
                         <h3 class="text-[1.05rem] font-semibold tracking-[-0.02em]" style="color: var(--theme-header-text-color);">{{ $isEditing ? __('Edit AI template') : __('Create AI template') }}</h3>
                         <p class="mt-2 text-[15px] leading-7" style="color: var(--theme-muted-text-color);">{{ $isEditing ? __('Update category assignment, prompt content, and publication status for this AI template.') : __('Create a reusable AI prompt template and assign it to one of your template categories.') }}</p>
@@ -180,7 +180,8 @@
                     </button>
                 </div>
 
-                <form wire:submit="saveTemplate" class="space-y-5 px-5 py-4 sm:px-6 sm:py-5">
+                <form wire:submit="saveTemplate" class="flex min-h-0 flex-1 flex-col overflow-hidden">
+                    <div class="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6 sm:py-5">
                     <div class="overflow-hidden rounded-[1.1rem] border" style="border-color: color-mix(in srgb, var(--theme-border-color) 56%, transparent); background:
                         radial-gradient(circle at top right, rgba(var(--theme-accent-rgb), 0.08), transparent 34%),
                         rgba(var(--theme-surface-base-rgb,255,255,255),0.92);">
@@ -243,8 +244,9 @@
                     <div class="rounded-[1rem] border px-4 py-3 text-sm leading-6" style="border-color: color-mix(in srgb, var(--theme-border-color) 56%, transparent); background-color: rgba(var(--theme-surface-base-rgb,255,255,255),0.78); color: var(--theme-muted-text-color);">
                         {{ __('Keep the prompt concise, assign the best-fit category, and disable templates you want to preserve without exposing them to active AI flows.') }}
                     </div>
+                    </div>
 
-                    <div class="flex items-center justify-between gap-3 border-t pt-4" style="border-color: color-mix(in srgb, var(--theme-border-color) 52%, transparent);">
+                    <div class="flex shrink-0 items-center justify-between gap-3 border-t px-5 py-4 sm:px-6" style="border-color: color-mix(in srgb, var(--theme-border-color) 52%, transparent); background-color: color-mix(in srgb, var(--theme-surface-overlay) 96%, transparent);">
                         <div>
                             @if ($isEditing && $editingTemplate)
                                 <x-ui.dialog :title="__('Delete this AI template?')" :description="__('This permanently removes the selected AI template from your reusable prompt library.')" width="sm" dismissible>
