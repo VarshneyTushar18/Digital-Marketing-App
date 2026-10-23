@@ -26,7 +26,7 @@ use Modules\AppAffiliate\Models\AffiliateWithdrawal;
 use Modules\AppCredits\Support\CreditService;
 use Modules\AdminUser\Support\AdminPermissionCatalog;
 
-#[Fillable(['name', 'username', 'email', 'referral_code', 'referred_by_user_id', 'avatar_path', 'avatar_disk', 'locale', 'timezone', 'role_id', 'is_super_admin', 'plan_id', 'next_plan_id', 'plan_started_at', 'plan_expires_at', 'password'])]
+#[Fillable(['name', 'username', 'email', 'email_verified_at', 'referral_code', 'referred_by_user_id', 'avatar_path', 'avatar_disk', 'locale', 'timezone', 'role_id', 'is_super_admin', 'plan_id', 'next_plan_id', 'plan_started_at', 'plan_expires_at', 'password'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail, HasLocalePreference
 {
