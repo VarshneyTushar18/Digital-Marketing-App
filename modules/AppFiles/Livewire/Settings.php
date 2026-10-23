@@ -7,6 +7,7 @@ use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Modules\AdminSettings\Support\OptionStore;
+use Modules\AppFiles\Support\Google\PublishDriveOAuthService;
 
 #[Title('File Manager Settings')]
 class Settings extends Component
@@ -28,6 +29,12 @@ class Settings extends Component
     public string $appfiles_google_drive_client_id = '';
 
     public string $appfiles_google_drive_client_secret = '';
+
+    public string $appfiles_publish_drive_archive = '0';
+
+    public string $appfiles_publish_drive_parent_folder_id = '';
+
+    public string $appfiles_publish_drive_oauth_client_secret = '';
 
     public string $appfiles_dropbox = '0';
 
@@ -136,6 +143,9 @@ class Settings extends Component
             'appfiles_google_drive' => ['required', 'in:0,1'],
             'appfiles_google_drive_client_id' => ['nullable', 'string', 'max:255'],
             'appfiles_google_drive_client_secret' => ['nullable', 'string', 'max:255'],
+            'appfiles_publish_drive_archive' => ['required', 'in:0,1'],
+            'appfiles_publish_drive_parent_folder_id' => ['nullable', 'string', 'max:255'],
+            'appfiles_publish_drive_oauth_client_secret' => ['nullable', 'string', 'max:255'],
             'appfiles_dropbox' => ['required', 'in:0,1'],
             'appfiles_dropbox_app_key' => ['nullable', 'string', 'max:255'],
             'appfiles_dropbox_app_secret' => ['nullable', 'string', 'max:255'],
@@ -176,9 +186,29 @@ class Settings extends Component
             'appfiles_contabo_use_path_style_endpoint' => ['required', 'in:0,1'],
         ]);
 
+        if ((string) ($validated['appfiles_publish_drive_archive'] ?? '0') === '1') {
+            $oauth = app(PublishDriveOAuthService::class);
+
+            if (! $oauth->isReady()) {
+                $this->addError('appfiles_publish_drive_archive', __('Connect a Google account when backup is enabled.'));
+
+                return;
+            }
+
+            if (trim((string) ($validated['appfiles_publish_drive_parent_folder_id'] ?? '')) === '') {
+                $this->addError('appfiles_publish_drive_parent_folder_id', __('Parent folder ID is required when backup is enabled.'));
+
+                return;
+            }
+        }
+
         foreach ($validated as $key => $value) {
             $this->options->set($key, $value);
         }
+
+        $this->options->set('appfiles_publish_drive_service_account_json', '');
+        $this->options->set('appfiles_publish_drive_root_folder', '');
+        $this->options->set('appfiles_publish_drive_shared_drive_id', '');
 
         $this->options->set('appfiles_adobe_express_client_id', $validated['appfiles_adobe_express_api_key'] ?? '');
         $this->options->set('appfiles_adobe_express_client_secret', $validated['appfiles_adobe_express_app_name'] ?? '');
@@ -196,6 +226,9 @@ class Settings extends Component
             'appfiles_google_drive' => config('modules.appfiles.enable_google_drive', false) ? '1' : '0',
             'appfiles_google_drive_client_id' => '',
             'appfiles_google_drive_client_secret' => '',
+            'appfiles_publish_drive_archive' => '0',
+            'appfiles_publish_drive_parent_folder_id' => '',
+            'appfiles_publish_drive_oauth_client_secret' => '',
             'appfiles_dropbox' => config('modules.appfiles.enable_dropbox', false) ? '1' : '0',
             'appfiles_dropbox_app_key' => '',
             'appfiles_dropbox_app_secret' => '',
@@ -247,8 +280,13 @@ class Settings extends Component
 
     public function render(): View
     {
+        $oauth = app(PublishDriveOAuthService::class);
+
         return view('appfiles::settings', [
             'toggleOptions' => $this->toggleOptions(),
+            'publishDriveOAuthConnected' => $oauth->isReady(),
+            'publishDriveOAuthEmail' => $oauth->connectedEmail(),
+            'publishDriveOAuthRedirectUri' => $oauth->redirectUri(),
             'storageDiskOptions' => collect($this->storageDriverManager->diskOptions())
                 ->map(fn (string $label, string $value) => ['value' => $value, 'label' => $label])
                 ->values()
@@ -258,3 +296,4 @@ class Settings extends Component
         ]);
     }
 }
+

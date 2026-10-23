@@ -93,6 +93,46 @@
                             <x-ui.input wire:model="appfiles_google_drive_client_secret" name="appfiles_google_drive_client_secret" type="password" :label="__('Browser API Key')" :value="$appfiles_google_drive_client_secret" :error="$errors->first('appfiles_google_drive_client_secret')" />
                         </div>
                         <p class="text-sm leading-6" style="color: var(--theme-muted-text-color);">{{ __('Google Picker needs an OAuth Client ID and a Browser API key. Native Docs, Sheets, and Slides are not imported yet.') }}</p>
+
+                        <div class="mt-2 space-y-4 rounded-[1rem] border p-4" style="border-color: rgba(var(--theme-border-color-rgb), 0.68); background-color: rgba(var(--theme-border-color-rgb), 0.03);">
+                            <div>
+                                <p class="text-sm font-semibold" style="color: var(--theme-header-text-color);">{{ __('Published posts → Google Drive') }}</p>
+                                <p class="mt-1 text-sm" style="color: var(--theme-muted-text-color);">{{ __('Uploads images and videos after a successful publish, grouped by social account.') }}</p>
+                            </div>
+                            <x-ui.radio-group name="appfiles_publish_drive_archive" wire:model.live="appfiles_publish_drive_archive" :label="__('Back up published media')" :options="$toggleOptions" :value="$appfiles_publish_drive_archive" />
+                            <x-ui.input
+                                wire:model="appfiles_publish_drive_parent_folder_id"
+                                name="appfiles_publish_drive_parent_folder_id"
+                                :label="__('Parent folder ID')"
+                                :help="__('Drive URL segment after /folders/. Subfolders use the account name.')"
+                                :value="$appfiles_publish_drive_parent_folder_id"
+                                :error="$errors->first('appfiles_publish_drive_parent_folder_id')"
+                            />
+                            <x-ui.input
+                                wire:model="appfiles_publish_drive_oauth_client_secret"
+                                name="appfiles_publish_drive_oauth_client_secret"
+                                type="password"
+                                :label="__('Web client secret')"
+                                :help="__('OAuth client secret from Google Cloud — not the Browser API key.')"
+                                :value="$appfiles_publish_drive_oauth_client_secret"
+                                :error="$errors->first('appfiles_publish_drive_oauth_client_secret')"
+                            />
+                            <div class="space-y-3 border-t pt-4" style="border-color: rgba(var(--theme-border-color-rgb), 0.68);">
+                                <p class="text-sm font-semibold" style="color: var(--theme-header-text-color);">{{ __('Backup Google account') }}</p>
+                                @if (session('success'))
+                                    <p class="text-sm" style="color: var(--theme-success-color, #16a34a);">{{ session('success') }}</p>
+                                @endif
+                                @if (session('error'))
+                                    <p class="text-sm" style="color: var(--theme-danger-color);">{{ session('error') }}</p>
+                                @endif
+                                @if ($publishDriveOAuthConnected ?? false)
+                                    <p class="text-sm" style="color: var(--theme-muted-text-color);">{{ __('Signed in as') }} <strong>{{ $publishDriveOAuthEmail }}</strong> · <a href="{{ route('appfiles.publish-drive.disconnect') }}" class="font-medium underline">{{ __('Disconnect') }}</a></p>
+                                @else
+                                    <p class="text-xs" style="color: var(--theme-muted-text-color);">{{ __('Redirect URI:') }} <code>{{ $publishDriveOAuthRedirectUri ?? '' }}</code></p>
+                                    <a href="{{ route('appfiles.publish-drive.connect') }}" class="inline-flex rounded-lg px-4 py-2 text-sm font-semibold text-white" style="background-color: var(--theme-accent-color, #0A66C2);">{{ __('Connect Google account') }}</a>
+                                @endif
+                            </div>
+                        </div>
                     </x-theme.section-card>
 
                     <x-theme.section-card
@@ -165,3 +205,5 @@
         </form>
     </x-settings.layout>
 </section>
+
+
