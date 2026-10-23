@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Modules\AppAutomation\Services\AutomationWebhookDispatcher;
+use Modules\AppFiles\Jobs\ArchivePublishedPostMediaToGoogleDriveJob;
 use Modules\AppPublishing\Models\PublishingPost;
 use Modules\AppPublishing\Services\Publishing\PostPublishService;
 use Modules\AppPublishing\Services\Publishing\RecurringPostScheduler;
@@ -76,6 +77,8 @@ class PublishScheduledPostJob implements ShouldQueue
             $post->refresh();
 
             if ($state === 'published') {
+                ArchivePublishedPostMediaToGoogleDriveJob::dispatch($post->id);
+
                 try {
                     $recurringPosts->createNextAfterSuccessfulPublish($post);
                 } catch (Throwable $recurringException) {

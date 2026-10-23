@@ -8,9 +8,13 @@ use Modules\AppFiles\Livewire\AdminIndex;
 use Modules\AppFiles\Livewire\PortalIndex;
 use Modules\AppFiles\Livewire\PortalImageEditor;
 use Modules\AppFiles\Livewire\PortalSearchOnline;
+use Modules\AppFiles\Http\Controllers\PublishDriveOAuthController;
 use Modules\AppFiles\Livewire\Settings;
 
 Route::middleware(['web', 'auth'])->group(function (): void {
+    Route::get('integrations/google/publish-drive/connect', [PublishDriveOAuthController::class, 'connect'])->name('appfiles.publish-drive.connect');
+    Route::get('integrations/google/publish-drive/callback', [PublishDriveOAuthController::class, 'callback'])->name('appfiles.publish-drive.callback');
+    Route::get('admin/settings/files/publish-drive/disconnect', [PublishDriveOAuthController::class, 'disconnect'])->name('appfiles.publish-drive.disconnect');
     Route::livewire('settings/files', Settings::class);
     Route::view('/appfiles/picker/onedrive/callback', 'appfiles::onedrive-callback')->name('appfiles.onedrive-callback');
     Route::view('/appfiles/editor/picker-callback', 'appfiles::editor-callback')->name('appfiles.editor-callback');
@@ -86,3 +90,4 @@ Route::middleware(['web', 'auth', 'verified'])
         Route::post('/{file}/edit-image', [PortalFileController::class, 'updateImage'])->name('update-image');
         Route::delete('/{file}', [PortalFileController::class, 'destroy'])->name('destroy');
     });
+
