@@ -190,13 +190,13 @@ class Settings extends Component
             $oauth = app(PublishDriveOAuthService::class);
 
             if (! $oauth->isReady()) {
-                $this->addError('appfiles_publish_drive_archive', __('Connect a Google account for Drive backup when publish archive is enabled.'));
+                $this->addError('appfiles_publish_drive_archive', __('Connect a Google account when backup is enabled.'));
 
                 return;
             }
 
             if (trim((string) ($validated['appfiles_publish_drive_parent_folder_id'] ?? '')) === '') {
-                $this->addError('appfiles_publish_drive_parent_folder_id', __('Parent folder ID is required when publish archive is enabled.'));
+                $this->addError('appfiles_publish_drive_parent_folder_id', __('Parent folder ID is required when backup is enabled.'));
 
                 return;
             }

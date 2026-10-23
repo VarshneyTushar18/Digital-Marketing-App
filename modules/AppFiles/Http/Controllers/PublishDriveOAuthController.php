@@ -20,7 +20,7 @@ class PublishDriveOAuthController extends Controller
         if ($this->oauth->clientId() === '' || $this->oauth->clientSecret() === '') {
             return redirect()
                 ->route('settings.files')
-                ->with('error', __('Add Google OAuth Client ID and OAuth Client Secret (publish backup) in File Manager settings, save, then connect.'));
+                ->with('error', __('Add Client ID and Web client secret, save settings, then connect.'));
         }
 
         $oauthState = Str::random(40);
@@ -75,7 +75,7 @@ class PublishDriveOAuthController extends Controller
 
         return redirect()
             ->route('settings.files')
-            ->with('success', __('Google account connected for published post Drive backup.'));
+            ->with('success', __('Google account connected.'));
     }
 
     public function disconnect(): RedirectResponse
@@ -84,6 +84,6 @@ class PublishDriveOAuthController extends Controller
 
         return redirect()
             ->route('settings.files')
-            ->with('success', __('Google Drive backup account disconnected.'));
+            ->with('success', __('Google account disconnected.'));
     }
 }
