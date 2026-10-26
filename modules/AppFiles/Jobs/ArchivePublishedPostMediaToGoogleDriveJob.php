@@ -19,7 +19,10 @@ class ArchivePublishedPostMediaToGoogleDriveJob implements ShouldQueue
 
     public int $tries = 3;
 
-    public function __construct(public int $postId) {}
+    public function __construct(public int $postId)
+    {
+        $this->onQueue('drive-archive');
+    }
 
     public function handle(PublishedPostMediaDriveArchiver $archiver): void
     {
