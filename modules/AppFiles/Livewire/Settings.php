@@ -8,6 +8,8 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Modules\AdminSettings\Support\OptionStore;
 use Modules\AppFiles\Support\Google\PublishDriveOAuthService;
+use Modules\AppFiles\Support\PublishDriveBackupDiagnostics;
+use Throwable;
 
 #[Title('File Manager Settings')]
 class Settings extends Component
@@ -112,6 +114,13 @@ class Settings extends Component
 
     public string $appfiles_contabo_use_path_style_endpoint = '1';
 
+    public ?string $publishDriveTestStatus = null;
+
+    public string $publishDriveTestMessage = '';
+
+    /** @var list<array{label: string, status: string, detail: string}> */
+    public array $publishDriveTestChecks = [];
+
     public function boot(OptionStore $options, StorageDriverManager $storageDriverManager): void
     {
         $this->options = $options;
@@ -213,7 +222,39 @@ class Settings extends Component
         $this->options->set('appfiles_adobe_express_client_id', $validated['appfiles_adobe_express_api_key'] ?? '');
         $this->options->set('appfiles_adobe_express_client_secret', $validated['appfiles_adobe_express_app_name'] ?? '');
 
+        if ((string) ($validated['appfiles_publish_drive_archive'] ?? '0') === '1') {
+            try {
+                app(PublishDriveOAuthService::class)->getAccessToken();
+            } catch (Throwable $exception) {
+                $this->addError(
+                    'appfiles_publish_drive_oauth_client_secret',
+                    __('Google OAuth failed: :message', ['message' => $exception->getMessage()]),
+                );
+
+                return;
+            }
+        }
+
         $this->dispatch('settings-saved');
+    }
+
+    public function testPublishDriveBackup(): void
+    {
+        $this->publishDriveTestStatus = null;
+        $this->publishDriveTestMessage = '';
+        $this->publishDriveTestChecks = [];
+
+        $result = PublishDriveBackupDiagnostics::run(
+            trim($this->appfiles_publish_drive_oauth_client_secret) !== ''
+                ? $this->appfiles_publish_drive_oauth_client_secret
+                : null,
+        );
+
+        $this->publishDriveTestChecks = $result['checks'];
+        $this->publishDriveTestStatus = $result['ok'] ? 'success' : 'danger';
+        $this->publishDriveTestMessage = $result['ok']
+            ? __('Drive backup connection looks good. Publish a post with media to confirm uploads.')
+            : __('Fix the failed checks below (wrong Web client secret is a common cause).');
     }
 
     protected function defaults(): array

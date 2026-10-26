@@ -13,6 +13,12 @@ class AppFilesServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Modules\AppFiles\Console\DiagnosePublishDriveBackupCommand::class,
+            ]);
+        }
+
         $this->loadRoutesFrom(__DIR__.'/../Routes/web.php');
         $this->loadViewsFrom(__DIR__.'/../Resources/views', 'appfiles');
 
