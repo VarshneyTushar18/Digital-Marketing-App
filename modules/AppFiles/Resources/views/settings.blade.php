@@ -104,7 +104,7 @@
                                 wire:model="appfiles_publish_drive_parent_folder_id"
                                 name="appfiles_publish_drive_parent_folder_id"
                                 :label="__('Parent folder ID')"
-                                :help="__('Drive URL segment after /folders/. Subfolders use the account name.')"
+                                :help="__('Drive URL segment after /folders/. Subfolders use the account name. After permission changes, disconnect and connect Google again.')"
                                 :value="$appfiles_publish_drive_parent_folder_id"
                                 :error="$errors->first('appfiles_publish_drive_parent_folder_id')"
                             />

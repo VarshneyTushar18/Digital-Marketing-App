@@ -10,7 +10,8 @@ use Throwable;
 
 class PublishDriveOAuthService
 {
-    public const SCOPE = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.email';
+    /** Full Drive scope so a user-chosen parent folder ID (created in drive.google.com) is accessible for uploads. */
+    public const SCOPE = 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.email';
 
     public function __construct(
         protected OptionStore $options,
