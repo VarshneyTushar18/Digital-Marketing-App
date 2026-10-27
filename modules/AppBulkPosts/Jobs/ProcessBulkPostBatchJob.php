@@ -13,6 +13,7 @@ use Modules\AdminUser\Models\User;
 use Modules\AppBulkPosts\Models\BulkPostBatch;
 use Modules\AppBulkPosts\Models\BulkPostRow;
 use Modules\AppChannels\Models\SocialAccount;
+use Modules\AppFiles\Support\FileManager;
 use Modules\AppPublishing\Models\PublishingPost;
 use Modules\AppTeams\Support\TeamWorkspaceAccess;
 
@@ -27,7 +28,7 @@ class ProcessBulkPostBatchJob implements ShouldQueue
 
     public function __construct(public int $batchId) {}
 
-    public function handle(): void
+    public function handle(FileManager $files): void
     {
         $batch = BulkPostBatch::query()->with(['rows'])->find($this->batchId);
 
@@ -61,6 +62,7 @@ class ProcessBulkPostBatchJob implements ShouldQueue
         $shortenUrls = (bool) data_get($batch->meta, 'shorten_urls', false);
         $fallbackScheduleAt = now();
         $owner = User::query()->find((int) $batch->owner_user_id);
+        $workspaceOwner = User::query()->find((int) data_get($batch->meta, 'workspace_owner_user_id', $batch->owner_user_id));
         $teamId = $batch->team_id ?? TeamWorkspaceAccess::currentTeamId($owner);
 
         if ($teamId && ! $batch->team_id) {
@@ -107,6 +109,8 @@ class ProcessBulkPostBatchJob implements ShouldQueue
                     ? Carbon::parse((string) $payload['schedule_time_iso'])
                     : $fallbackScheduleAt->copy();
                 $statusMode = (string) ($payload['status_mode'] ?? 'schedule');
+                $medias = $this->resolveBulkRowMedias($files, $workspaceOwner, $payload);
+                $hasMedia = $medias !== [];
 
                 $createdPosts = 0;
 
@@ -138,14 +142,14 @@ class ProcessBulkPostBatchJob implements ShouldQueue
                         'module' => (string) $account->provider_key,
                         'function' => 'post',
                         'api_type' => 1,
-                        'type' => filled($payload['media_url'] ?? null) ? 'media' : 'text',
+                        'type' => $hasMedia ? 'media' : 'text',
                         'method' => 'basic',
                         'query_id' => null,
                         'data' => [
                             'title' => trim((string) Str::limit((string) ($payload['caption'] ?? ''), 46, '...')),
                             'caption' => trim((string) ($payload['caption'] ?? '')),
-                            'media_type' => filled($payload['media_url'] ?? null) ? 'image' : 'text',
-                            'medias' => [],
+                            'media_type' => $hasMedia ? 'image' : 'text',
+                            'medias' => $medias,
                             'source_media_urls' => array_values(array_filter([(string) ($payload['media_url'] ?? '')])),
                             'options' => [
                                 'schedule_mode' => 'specific_days_times',
@@ -210,5 +214,34 @@ class ProcessBulkPostBatchJob implements ShouldQueue
             'stats' => $stats,
             'last_processed_at' => now(),
         ]);
+    }
+
+    /**
+     * @param  array<string, mixed>  $payload
+     * @return array<int, array<string, mixed>>
+     */
+    protected function resolveBulkRowMedias(FileManager $files, ?User $workspaceOwner, array $payload): array
+    {
+        $mediaUrl = trim((string) ($payload['media_url'] ?? ''));
+
+        if ($mediaUrl === '' || ! $workspaceOwner) {
+            return [];
+        }
+
+        $file = $files->storeRemoteFile($workspaceOwner, $mediaUrl);
+        $previewUrl = route('portal.files.preview', $file);
+
+        return [[
+            'id' => (int) $file->id,
+            'idSecure' => (string) $file->id_secure,
+            'name' => (string) $file->name,
+            'url' => $previewUrl,
+            'previewUrl' => $previewUrl,
+            'embedUrl' => $previewUrl,
+            'mimeType' => (string) $file->mime_type,
+            'extension' => (string) $file->extension,
+            'category' => (string) $file->category,
+            'isImage' => (bool) $file->is_image,
+        ]];
     }
 }

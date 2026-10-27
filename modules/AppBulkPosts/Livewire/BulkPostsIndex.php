@@ -86,10 +86,7 @@ class BulkPostsIndex extends Component
 
         return redirect()
             ->route('portal.publishing.calendar')
-            ->with('status', __('Bulk posts have been added to Publishing. Success: :success, Failed: :failed.', [
-                'success' => number_format((int) data_get($batch->stats, 'created_posts', 0)),
-                'failed' => number_format((int) data_get($batch->stats, 'failed_rows', 0)),
-            ]));
+            ->with('status', $batch->importStatusMessage());
     }
 
     public function render(): View

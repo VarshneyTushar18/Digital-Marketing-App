@@ -1055,8 +1055,14 @@ class AiContentStudioService
         $payload = [
             'model' => $model,
             'prompt' => $this->imagePrompt($prompt, $style, $ratio, $config),
-            'size' => $this->openAiImageSize($ratio),
+            'size' => $this->openAiImageSize($ratio, $model),
         ];
+
+        $quality = $this->openAiImageQuality($model);
+
+        if ($quality !== null) {
+            $payload['quality'] = $quality;
+        }
 
         if (str_starts_with($model, 'dall-e-')) {
             $payload['response_format'] = 'b64_json';
@@ -1844,29 +1850,70 @@ class AiContentStudioService
             'editorial' => 'Style hint: editorial magazine photography, refined composition, strong visual hierarchy.',
             'minimal' => 'Style hint: minimal clean composition, restrained details, generous negative space.',
             'cinematic' => 'Style hint: cinematic lighting, depth, realistic atmosphere, strong contrast.',
-            default => 'Style hint: realistic commercial-quality image with a clear focal point and refined lighting.',
+            'social_marketing' => 'Style hint: polished B2B social feed creative for Facebook, Instagram, and LinkedIn; clean white or light background; professional tech photography blended with subtle 3D icons; strong focal subject; premium agency quality; leave generous negative space at the top for headline overlays.',
+            default => 'Style hint: realistic commercial-quality image with a clear focal point, sharp detail, and refined professional lighting.',
         };
 
-        return trim(implode("\n\n", [
-            'Create an image that follows the user brief exactly. Do not change the subject or add unrelated social-media mockups, devices, UI screens, banners, logos, labels, or headline text unless the user explicitly asks for them.',
-            $styleDirection,
+        $qualityLines = [
+            'Render with sharp focus, clean edges, realistic textures, and balanced professional lighting.',
             'Respect this aspect ratio: '.$ratio.'.',
-            'Avoid watermarks, UI chrome, collage frames, unreadable text, extra branding, and decorative typography.',
             ...$this->promptPreferenceLines($config),
-            'If brand rules are provided, reflect them through subject choice, mood, color feel, environment, and composition. Do not add visible brand text unless the user asks for it.',
             'If the brief is in another language, understand it semantically and render the requested scene directly.',
             'User brief: '.trim($prompt),
-        ]));
+        ];
+
+        if ($style === 'social_marketing') {
+            return trim(implode("\n\n", array_merge([
+                'Create a square-ready social marketing hero image that follows the user brief.',
+                'Minimize long readable text, watermarks, and fake logos inside the image; prefer visual storytelling with room for post-production headline overlays.',
+                $styleDirection,
+            ], $qualityLines)));
+        }
+
+        return trim(implode("\n\n", array_merge([
+            'Create an image that follows the user brief exactly. Do not change the subject or add unrelated social-media mockups, devices, UI screens, banners, logos, labels, or headline text unless the user explicitly asks for them.',
+            $styleDirection,
+            'Avoid watermarks, UI chrome, collage frames, unreadable text, extra branding, and decorative typography.',
+            'If brand rules are provided, reflect them through subject choice, mood, color feel, environment, and composition. Do not add visible brand text unless the user asks for it.',
+        ], $qualityLines)));
     }
 
-    protected function openAiImageSize(string $ratio): string
+    protected function openAiImageQuality(string $model): ?string
     {
-        return match ($ratio) {
+        $configured = strtolower(trim((string) $this->options->get('ai_image_quality', 'high')));
+
+        if (str_starts_with($model, 'gpt-image') || $model === 'chatgpt-image-latest') {
+            return match ($configured) {
+                'low', 'medium', 'high', 'auto' => $configured,
+                default => 'high',
+            };
+        }
+
+        if (str_starts_with($model, 'dall-e-3')) {
+            return in_array($configured, ['hd', 'high'], true) ? 'hd' : 'standard';
+        }
+
+        return null;
+    }
+
+    protected function openAiImageSize(string $ratio, string $model = ''): string
+    {
+        $size = match ($ratio) {
             '4:5' => '1024x1536',
             '16:9' => '1536x1024',
             '9:16' => '1024x1536',
             default => '1024x1024',
         };
+
+        if (str_starts_with($model, 'dall-e-3')) {
+            return match ($ratio) {
+                '16:9' => '1792x1024',
+                '9:16', '4:5' => '1024x1792',
+                default => '1024x1024',
+            };
+        }
+
+        return $size;
     }
 
     protected function responseErrorMessage(Response $response, string $fallback): string
