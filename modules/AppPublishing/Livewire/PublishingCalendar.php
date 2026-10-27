@@ -190,6 +190,7 @@ class PublishingCalendar extends Component
         $this->resetComposer();
         $this->composerOpen = true;
         $this->dispatch('publishing-composer-scroll-lock');
+        $this->dispatchComposerCaptionLibrary();
         if ($date) {
             $this->composer['schedule_mode'] = 'specific_days_times';
             $userNow = now($this->currentTimezone());
@@ -501,11 +502,12 @@ class PublishingCalendar extends Component
         ])['composer'];
 
         $title = trim((string) ($validated['caption_library_name'] ?? ''));
+        $ownerId = $this->workspaceOwnerUserId();
         $caption = CaptionLibraryItem::query()->create([
-            'owner_user_id' => (int) $user->id,
+            'owner_user_id' => $ownerId,
             'team_id' => $this->currentTeamId(),
             'name' => $title,
-            'slug' => $this->uniqueComposerCaptionSlug($title, (int) $user->id),
+            'slug' => $this->uniqueComposerCaptionSlug($title, $ownerId),
             'source_type' => (string) ($validated['caption_library_source_type'] ?? 'manual'),
             'status' => 'active',
             'content' => $content,
@@ -525,6 +527,7 @@ class PublishingCalendar extends Component
 
         $studio->annotateCaption($caption);
         $this->flushComposerReferenceCache();
+        $this->dispatchComposerCaptionLibrary();
         $this->dispatch('app-toast', type: 'success', title: __('Caption saved'), message: __('The caption was added to your caption library.'));
         $this->dispatch('publishing-caption-save-finished');
         $this->resetErrorBag(['composer.caption', 'composer.caption_library_name', 'composer.caption_library_source_type']);
@@ -593,8 +596,8 @@ class PublishingCalendar extends Component
         $result = $studio->generateWorkspaceImage(
             auth()->user(),
             $this->composerImagePromptFromSeed($prompt),
-            style: 'editorial',
-            ratio: '1:1',
+            style: $this->composerAiImageStyle(),
+            ratio: $this->composerAiImageRatio(),
         );
 
         /** @var AppFile|null $file */
@@ -719,6 +722,7 @@ class PublishingCalendar extends Component
         $this->composer = $this->composerPayloadFromPost($post, true);
         $this->composerOpen = true;
         $this->dispatch('publishing-composer-scroll-lock');
+        $this->dispatchComposerCaptionLibrary();
     }
 
     public function copyPost(string $postId): void
@@ -734,6 +738,7 @@ class PublishingCalendar extends Component
         $this->composer = $this->composerPayloadFromPost($post, false);
         $this->composerOpen = true;
         $this->dispatch('publishing-composer-scroll-lock');
+        $this->dispatchComposerCaptionLibrary();
     }
 
     public function deletePost(string $postId): void
@@ -2728,14 +2733,67 @@ class PublishingCalendar extends Component
         $clean = trim(preg_replace('/\s+/', ' ', strip_tags($seed)));
         $clean = Str::limit($clean, 900, '');
 
+        if ($this->composerAiImageStyle() === 'social_marketing') {
+            return $clean;
+        }
+
         return trim(implode("\n\n", array_filter([
-            'Create a realistic editorial image based directly on this caption or story.',
-            'Depict the actual subject, people, setting, conflict, or event described in the text.',
-            'Do not create generic social media workflow graphics, dashboards, office desks, phones, laptops, charts, collage layouts, or marketing mockups unless they are explicitly mentioned in the text.',
-            'Avoid visible text, headlines, captions, UI panels, watermarks, and split-layout compositions.',
-            'Use one strong, coherent scene with believable details and documentary-style visual storytelling.',
-            'Story to visualize: '.$clean,
+            'Create a high-quality commercial image for Facebook, Instagram, and LinkedIn feeds.',
+            'Depict the subject, people, setting, or product described in the brief with sharp focus and professional lighting.',
+            'Avoid visible text, watermarks, logos, and cluttered collage layouts unless the brief explicitly requests them.',
+            'Brief: '.$clean,
         ])));
+    }
+
+    protected function composerAiImageStyle(): string
+    {
+        $style = strtolower(trim((string) data_get($this->composerAiStudioSettings(), 'image_style', 'product')));
+
+        return in_array($style, ['product', 'lifestyle', 'editorial', 'minimal', 'cinematic', 'social_marketing'], true)
+            ? $style
+            : 'product';
+    }
+
+    protected function composerAiImageRatio(): string
+    {
+        $ratio = trim((string) data_get($this->composerAiStudioSettings(), 'image_ratio', '1:1'));
+
+        return in_array($ratio, ['1:1', '4:5', '16:9', '9:16'], true) ? $ratio : '1:1';
+    }
+
+    protected function composerAiStudioSettings(): array
+    {
+        $user = auth()->user();
+
+        if (! $user) {
+            return [];
+        }
+
+        $defaults = [
+            'image_style' => 'product',
+            'image_ratio' => '1:1',
+        ];
+
+        $userSettings = (array) (AIStudioUserSetting::query()->forUser((int) $user->id)->value('settings') ?? []);
+
+        $workspaceSettings = (array) (AIStudioWorkspaceSetting::query()
+            ->ownedBy($this->workspaceOwnerUserId())
+            ->forTeam(TeamWorkspaceAccess::activeTeam($user)?->id)
+            ->value('settings') ?? []);
+
+        return array_replace($defaults, $workspaceSettings, $userSettings);
+    }
+
+    protected function dispatchComposerCaptionLibrary(): void
+    {
+        if (! $this->composerOpen) {
+            return;
+        }
+
+        $this->dispatch(
+            'publishing-caption-library-updated',
+            library: $this->composerCaptionLibrary()->values()->all(),
+        );
     }
 
     protected function composerMediaItemFromFile(AppFile $file): array

@@ -155,6 +155,7 @@ class AISettingsController extends Controller
             ['value' => 'editorial', 'label' => __('Editorial')],
             ['value' => 'minimal', 'label' => __('Minimal')],
             ['value' => 'cinematic', 'label' => __('Cinematic')],
+            ['value' => 'social_marketing', 'label' => __('Social marketing')],
         ];
     }
 

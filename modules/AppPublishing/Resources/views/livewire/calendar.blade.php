@@ -553,6 +553,7 @@
     x-on:publishing-post-preview-scroll-lock.window="document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden';"
     x-on:publishing-post-preview-scroll-unlock.window="document.documentElement.style.overflow = ''; document.body.style.overflow = '';"
     x-on:publishing-caption-save-finished.window="saveCaptionOpen = false"
+    x-on:publishing-caption-library-updated.window="captionLibrary = Array.isArray($event.detail?.library) ? $event.detail.library : []"
     x-on:tiktok-composer-policy.window="
         composerPublishBlocked = Boolean($event.detail?.blocked);
         composerPublishBlockedMessage = String($event.detail?.message || '');

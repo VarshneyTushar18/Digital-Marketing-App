@@ -112,15 +112,9 @@ class AppBulkPostController extends Controller
         ProcessBulkPostBatchJob::dispatchSync($batch->id);
         $batch->refresh();
         TeamWorkspaceAccess::bumpPublishingCalendarCache($request->user());
-        $createdPosts = (int) data_get($batch->stats, 'created_posts', 0);
-        $failedRows = (int) data_get($batch->stats, 'failed_rows', 0);
-
         return redirect()
             ->route('portal.publishing.calendar')
-            ->with('status', __('Bulk posts have been added to Publishing. Success: :success, Failed: :failed.', [
-                'success' => number_format($createdPosts),
-                'failed' => number_format($failedRows),
-            ]));
+            ->with('status', $batch->importStatusMessage());
     }
 
     public function process(Request $request, BulkPostBatch $batch): RedirectResponse

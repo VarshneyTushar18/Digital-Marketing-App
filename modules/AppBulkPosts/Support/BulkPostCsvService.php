@@ -136,7 +136,7 @@ class BulkPostCsvService
             ['column' => 'caption', 'required' => 'Yes', 'example' => 'Flash sale starts now', 'description' => 'Main post caption.'],
             ['column' => 'schedule_time', 'required' => 'No', 'example' => '2026-04-08 09:00:00', 'description' => 'Post schedule time in the current user timezone. If empty, the importer uses now plus the chosen interval.'],
             ['column' => 'link', 'required' => 'No', 'example' => 'https://example.com/promo', 'description' => 'Optional destination link saved with the post payload.'],
-            ['column' => 'media_url', 'required' => 'No', 'example' => 'https://cdn.example.com/banner.jpg', 'description' => 'Optional external media reference kept for future import and download flows.'],
+            ['column' => 'media_url', 'required' => 'No', 'example' => 'https://cdn.example.com/banner.jpg', 'description' => 'Optional image URL. The importer downloads it into File Manager and attaches it to each created post.'],
             ['column' => 'status_mode', 'required' => 'No', 'example' => 'schedule', 'description' => 'Use draft or schedule. Defaults to schedule.'],
         ];
     }
