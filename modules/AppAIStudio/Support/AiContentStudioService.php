@@ -26,6 +26,7 @@ class AiContentStudioService
     public function __construct(
         protected OptionStore $options,
         protected FileManager $files,
+        protected AiImageExportNormalizer $imageExportNormalizer,
     ) {}
 
     public function generateWorkspaceImage(User $user, string $prompt, string $style = 'product', string $ratio = '1:1'): array
@@ -59,11 +60,13 @@ class AiContentStudioService
                 default => throw new RuntimeException(__('The selected AI image provider is not supported.')),
             };
 
+            $contents = $this->imageExportNormalizer->normalize($image['contents'], $ratio);
+
             $file = $this->files->storeBinaryFile(
                 owner: $workspaceOwner,
                 originalName: 'ai-studio-image-'.now()->format('YmdHis').'.'.$image['extension'],
                 mimeType: $image['mime_type'],
-                contents: $image['contents'],
+                contents: $contents,
                 note: $image['prompt'],
             );
 
