@@ -8,7 +8,6 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Modules\AdminSettings\Support\OptionStore;
 use Modules\AppFiles\Support\Google\PublishDriveOAuthService;
-use Modules\AppFiles\Support\PublishDriveBackupDiagnostics;
 use Throwable;
 
 #[Title('File Manager Settings')]
@@ -114,13 +113,6 @@ class Settings extends Component
 
     public string $appfiles_contabo_use_path_style_endpoint = '1';
 
-    public ?string $publishDriveTestStatus = null;
-
-    public string $publishDriveTestMessage = '';
-
-    /** @var list<array{label: string, status: string, detail: string}> */
-    public array $publishDriveTestChecks = [];
-
     public function boot(OptionStore $options, StorageDriverManager $storageDriverManager): void
     {
         $this->options = $options;
@@ -195,21 +187,10 @@ class Settings extends Component
             'appfiles_contabo_use_path_style_endpoint' => ['required', 'in:0,1'],
         ]);
 
-        if ((string) ($validated['appfiles_publish_drive_archive'] ?? '0') === '1') {
-            $oauth = app(PublishDriveOAuthService::class);
-
-            if (! $oauth->isReady()) {
-                $this->addError('appfiles_publish_drive_archive', __('Connect a Google account when backup is enabled.'));
-
-                return;
-            }
-
-            if (trim((string) ($validated['appfiles_publish_drive_parent_folder_id'] ?? '')) === '') {
-                $this->addError('appfiles_publish_drive_parent_folder_id', __('Parent folder ID is required when backup is enabled.'));
-
-                return;
-            }
-        }
+        $previousClientId = trim((string) $this->options->get('appfiles_google_drive_client_id', ''));
+        $previousOauthSecret = trim((string) $this->options->get('appfiles_publish_drive_oauth_client_secret', ''));
+        $newClientId = trim((string) ($validated['appfiles_google_drive_client_id'] ?? ''));
+        $newOauthSecret = trim((string) ($validated['appfiles_publish_drive_oauth_client_secret'] ?? ''));
 
         foreach ($validated as $key => $value) {
             $this->options->set($key, $value);
@@ -222,39 +203,41 @@ class Settings extends Component
         $this->options->set('appfiles_adobe_express_client_id', $validated['appfiles_adobe_express_api_key'] ?? '');
         $this->options->set('appfiles_adobe_express_client_secret', $validated['appfiles_adobe_express_app_name'] ?? '');
 
-        if ((string) ($validated['appfiles_publish_drive_archive'] ?? '0') === '1') {
-            try {
-                app(PublishDriveOAuthService::class)->getAccessToken();
-            } catch (Throwable $exception) {
-                $this->addError(
-                    'appfiles_publish_drive_oauth_client_secret',
-                    __('Google OAuth failed: :message', ['message' => $exception->getMessage()]),
-                );
+        $oauth = app(PublishDriveOAuthService::class);
 
-                return;
-            }
+        if (
+            ($newClientId !== '' && $newClientId !== $previousClientId)
+            || ($newOauthSecret !== '' && $newOauthSecret !== $previousOauthSecret)
+        ) {
+            $oauth->disconnect();
         }
 
         $this->dispatch('settings-saved');
-    }
 
-    public function testPublishDriveBackup(): void
-    {
-        $this->publishDriveTestStatus = null;
-        $this->publishDriveTestMessage = '';
-        $this->publishDriveTestChecks = [];
+        if ((string) ($validated['appfiles_publish_drive_archive'] ?? '0') !== '1') {
+            return;
+        }
 
-        $result = PublishDriveBackupDiagnostics::run(
-            trim($this->appfiles_publish_drive_oauth_client_secret) !== ''
-                ? $this->appfiles_publish_drive_oauth_client_secret
-                : null,
-        );
+        if (trim((string) ($validated['appfiles_publish_drive_parent_folder_id'] ?? '')) === '') {
+            $this->addError('appfiles_publish_drive_parent_folder_id', __('Parent folder ID is required when backup is enabled.'));
 
-        $this->publishDriveTestChecks = $result['checks'];
-        $this->publishDriveTestStatus = $result['ok'] ? 'success' : 'danger';
-        $this->publishDriveTestMessage = $result['ok']
-            ? __('Drive backup connection looks good. Publish a post with media to confirm uploads.')
-            : __('Fix the failed checks below (wrong Web client secret is a common cause).');
+            return;
+        }
+
+        if (! $oauth->hasRefreshToken()) {
+            $this->addError('appfiles_publish_drive_archive', __('Connect a Google account when backup is enabled.'));
+
+            return;
+        }
+
+        try {
+            $oauth->getAccessToken();
+        } catch (Throwable $exception) {
+            $this->addError(
+                'appfiles_publish_drive_oauth_client_secret',
+                __('Google OAuth failed: :message', ['message' => $exception->getMessage()]),
+            );
+        }
     }
 
     protected function defaults(): array

@@ -117,31 +117,6 @@
                                 :value="$appfiles_publish_drive_oauth_client_secret"
                                 :error="$errors->first('appfiles_publish_drive_oauth_client_secret')"
                             />
-                            <div class="flex flex-wrap items-center gap-3">
-                                <x-ui.button type="button" variant="outline" size="sm" wire:click="testPublishDriveBackup" wire:loading.attr="disabled">
-                                    <span wire:loading.remove wire:target="testPublishDriveBackup">{{ __('Test Drive backup') }}</span>
-                                    <span wire:loading wire:target="testPublishDriveBackup">{{ __('Testing…') }}</span>
-                                </x-ui.button>
-                            </div>
-                            @if ($publishDriveTestStatus)
-                                <p class="text-sm" style="color: {{ $publishDriveTestStatus === 'success' ? 'var(--theme-success-color, #16a34a)' : 'var(--theme-danger-color)' }};">{{ $publishDriveTestMessage }}</p>
-                                @if (! empty($publishDriveTestChecks))
-                                    <ul class="space-y-1 text-sm" style="color: var(--theme-muted-text-color);">
-                                        @foreach ($publishDriveTestChecks as $check)
-                                            <li>
-                                                @if ($check['status'] === 'ok')
-                                                    <span style="color: var(--theme-success-color, #16a34a);">✓</span>
-                                                @elseif ($check['status'] === 'warn')
-                                                    <span style="color: rgb(217, 119, 6);">!</span>
-                                                @else
-                                                    <span style="color: var(--theme-danger-color);">✗</span>
-                                                @endif
-                                                <strong>{{ $check['label'] }}</strong> — {{ $check['detail'] }}
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-                            @endif
                             <div class="space-y-3 border-t pt-4" style="border-color: rgba(var(--theme-border-color-rgb), 0.68);">
                                 <p class="text-sm font-semibold" style="color: var(--theme-header-text-color);">{{ __('Backup Google account') }}</p>
                                 @if (session('success'))
