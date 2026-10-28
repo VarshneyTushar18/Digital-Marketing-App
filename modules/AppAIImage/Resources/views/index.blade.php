@@ -92,9 +92,15 @@
             </div>
 
             @if ($result)
+                @php
+                    $previewRatioRaw = (string) ($result['ratio'] ?? $ratio ?? '1:1');
+                    $previewRatioParts = explode(':', $previewRatioRaw, 2);
+                    $previewRatioW = max(1, (int) ($previewRatioParts[0] ?? 1));
+                    $previewRatioH = max(1, (int) ($previewRatioParts[1] ?? 1));
+                @endphp
                 <div
-                    class="relative mt-4 aspect-square overflow-hidden rounded-[0.95rem] border"
-                    style="border-color: rgba(var(--theme-border-color-rgb), 0.5); background: var(--theme-surface-base);"
+                    class="relative mt-4 w-full max-h-[min(70vh,36rem)] overflow-hidden rounded-[0.95rem] border"
+                    style="aspect-ratio: {{ $previewRatioW }} / {{ $previewRatioH }}; border-color: rgba(var(--theme-border-color-rgb), 0.5); background: color-mix(in srgb, var(--theme-surface-base) 96%, var(--theme-body-bg) 4%);"
                     x-data="{ imageLoaded: false, imageError: false }"
                 >
                     <div class="absolute inset-0 flex items-center justify-center px-6 text-center" style="background: color-mix(in srgb, var(--theme-surface-base) 96%, var(--theme-body-bg) 4%);">
@@ -116,7 +122,7 @@
                         <img
                             src="{{ $result['preview_url'] }}"
                             alt="{{ $result['file_name'] ?? 'AI image' }}"
-                            class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-200"
+                            class="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-200"
                             x-bind:class="{ 'opacity-100': imageLoaded && !imageError }"
                             x-on:load="imageLoaded = true"
                             x-on:error="imageError = true"
