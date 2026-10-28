@@ -190,8 +190,8 @@
                     x-on:dragover.prevent="dragOver($event)"
                     x-on:dragend="endDrag($event)"
                 >
-                    <div class="pointer-events-none absolute right-3 top-3 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full border bg-white/90 text-slate-400 opacity-0 shadow-sm transition group-hover:opacity-100" style="border-color: var(--theme-border-color);">
-                        <i class="fa-solid fa-grip-dots text-sm"></i>
+                    <div class="pointer-events-none absolute right-3 top-3 z-20 inline-flex h-8 w-8 items-center justify-center rounded-full border opacity-40 shadow-sm transition group-hover:opacity-100" style="border-color: var(--theme-border-color); background: color-mix(in srgb, var(--theme-card-background) 94%, transparent); color: var(--theme-header-text-color);">
+                        <i class="fa-solid fa-grip-vertical text-sm" aria-hidden="true"></i>
                     </div>
 
                     {!! $item['content'] !!}

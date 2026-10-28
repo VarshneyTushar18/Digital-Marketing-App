@@ -194,11 +194,11 @@
         color: #fff;
     }
 
-    a:not(.no-theme-link):not(.inline-flex):not(.rounded-full):not(.group):not(nav a) {
+    a:not(.no-theme-link):not(.btn):not(.inline-flex):not(.rounded-full):not(.group):not(nav a) {
         color: var(--theme-link-color);
     }
 
-    a:not(.no-theme-link):not(.inline-flex):not(.rounded-full):not(.group):not(nav a):hover {
+    a:not(.no-theme-link):not(.btn):not(.inline-flex):not(.rounded-full):not(.group):not(nav a):hover {
         color: var(--theme-link-hover-color);
     }
 

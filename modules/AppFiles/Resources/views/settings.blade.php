@@ -97,14 +97,14 @@
                         <div class="mt-2 space-y-4 rounded-[1rem] border p-4" style="border-color: rgba(var(--theme-border-color-rgb), 0.68); background-color: rgba(var(--theme-border-color-rgb), 0.03);">
                             <div>
                                 <p class="text-sm font-semibold" style="color: var(--theme-header-text-color);">{{ __('Published posts → Google Drive') }}</p>
-                                <p class="mt-1 text-sm" style="color: var(--theme-muted-text-color);">{{ __('Uploads images and videos after a successful publish, grouped by social account.') }}</p>
+                                <p class="mt-1 text-sm" style="color: var(--theme-muted-text-color);">{{ __('Uploads images and videos after a successful publish, grouped by social account and publish date (YYYY-MM-DD).') }}</p>
                             </div>
                             <x-ui.radio-group name="appfiles_publish_drive_archive" wire:model.live="appfiles_publish_drive_archive" :label="__('Back up published media')" :options="$toggleOptions" :value="$appfiles_publish_drive_archive" />
                             <x-ui.input
                                 wire:model="appfiles_publish_drive_parent_folder_id"
                                 name="appfiles_publish_drive_parent_folder_id"
                                 :label="__('Parent folder ID')"
-                                :help="__('Drive URL segment after /folders/. Subfolders use the account name. After permission changes, disconnect and connect Google again.')"
+                                :help="__('Drive URL segment after /folders/. Creates account subfolders, then a folder per publish date (YYYY-MM-DD), then files. After permission changes, disconnect and connect Google again.')"
                                 :value="$appfiles_publish_drive_parent_folder_id"
                                 :error="$errors->first('appfiles_publish_drive_parent_folder_id')"
                             />

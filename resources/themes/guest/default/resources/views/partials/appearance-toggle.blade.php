@@ -29,7 +29,7 @@
             x-on:click="setMode('light')"
             x-bind:class="mode === 'light' ? 'shadow-sm' : ''"
             class="inline-flex h-9 w-9 items-center justify-center rounded-full transition"
-            x-bind:style="mode === 'light' ? 'background: var(--theme-soft-surface); color: var(--theme-header-text-color);' : 'color: var(--theme-muted-text-color);'"
+            x-bind:style="(mode === 'light' || (mode === 'system' && resolved === 'light')) ? 'background: var(--theme-header-active); color: var(--theme-body-bg); box-shadow: 0 8px 18px -14px rgba(15,23,42,0.35);' : 'color: var(--theme-muted-text-color);'"
             aria-label="{{ __('Light mode') }}"
             title="{{ __('Light mode') }}"
         >
@@ -40,7 +40,7 @@
             x-on:click="setMode('dark')"
             x-bind:class="mode === 'dark' ? 'shadow-sm' : ''"
             class="inline-flex h-9 w-9 items-center justify-center rounded-full transition"
-            x-bind:style="mode === 'dark' ? 'background: var(--theme-soft-surface); color: var(--theme-header-text-color);' : 'color: var(--theme-muted-text-color);'"
+            x-bind:style="(mode === 'dark' || (mode === 'system' && resolved === 'dark')) ? 'background: var(--theme-header-active); color: var(--theme-body-bg); box-shadow: 0 8px 18px -14px rgba(0,0,0,0.45);' : 'color: var(--theme-muted-text-color);'"
             aria-label="{{ __('Dark mode') }}"
             title="{{ __('Dark mode') }}"
         >
