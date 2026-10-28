@@ -38,7 +38,7 @@
         <div class="sticky top-[4.75rem] z-30 mb-6 xl:top-[4.75rem]">
                 <div
                     class="flex w-full flex-wrap items-center justify-end gap-2 rounded-3xl border-x border-b px-4 py-3"
-                    style="border-color: var(--theme-border-color); background: rgba(255,255,255,0.96);"
+                    style="border-color: var(--theme-border-color); background: color-mix(in srgb, var(--theme-card-background) 94%, transparent); backdrop-filter: blur(10px);"
                 >
                         <x-ui.modal
                             width="lg"
@@ -151,7 +151,7 @@
                                 <div
                                     id="marketplace-cart-dropdown"
                                     class="hidden absolute right-0 z-20 mt-3 w-[360px] max-w-[calc(100vw-2rem)] rounded-3xl border p-4 shadow-[0_24px_80px_-36px_rgba(15,23,42,0.4)] backdrop-blur-sm"
-                                    style="border-color: var(--theme-border-color); background: rgba(255,255,255,0.98);"
+                                    style="border-color: var(--theme-border-color); background: var(--theme-card-background);"
                                 >
                                     <div class="space-y-4">
                                         <div class="flex items-center justify-between gap-3">
@@ -294,7 +294,7 @@
                             linear-gradient(180deg, color-mix(in srgb, var(--theme-surface-base) 96%, rgba(16,185,129,0.04)), color-mix(in srgb, var(--theme-surface-overlay) 94%, rgba(59,130,246,0.03)));">
                             <div class="flex items-start gap-4">
                                 <div class="relative h-20 w-20 shrink-0 overflow-hidden rounded-[1.2rem] border shadow-[0_18px_40px_-28px_rgba(15,23,42,0.22)]" style="border-color: rgba(var(--theme-border-color-rgb), 0.72); background:
-                                    linear-gradient(135deg, rgba(255,255,255,0.92), rgba(239,246,255,0.92));">
+                                    linear-gradient(135deg, color-mix(in srgb, var(--theme-surface-base) 94%, transparent), color-mix(in srgb, var(--theme-surface-overlay) 92%, transparent));">
                                     <div class="flex h-full w-full items-center justify-center text-3xl" style="color: var(--theme-muted-text-color); {{ $product['thumbnail_url'] ? 'display:none;' : '' }}" data-product-thumbnail-fallback>
                                         <i class="fa-solid fa-cubes"></i>
                                     </div>
@@ -557,7 +557,7 @@
                     }
 
                     itemsNode.innerHTML = items.map((item) => `
-                        <div class="rounded-2xl border p-4" style="border-color: var(--theme-border-color); background: rgba(255,255,255,0.96);">
+                        <div class="rounded-2xl border p-4" style="border-color: var(--theme-border-color); background: var(--theme-card-background);">
                             <div class="flex items-start justify-between gap-3">
                                 <div class="min-w-0">
                                     <p class="truncate font-medium" style="color: var(--theme-header-text-color);">${item.name}</p>

@@ -24,7 +24,6 @@
             ['label' => __('Privacy Policy'), 'route' => 'guest.privacy-policy'],
             ['label' => __('Terms of Use'), 'route' => 'guest.terms-of-use'],
             ['label' => __('Data Deletion'), 'route' => 'guest.delete-data'],
-            ['label' => __('Social Pages'), 'route' => 'guest.social-pages'],
         ];
     @endphp
 
@@ -146,7 +145,7 @@
         .guest-static-content p {
             margin: 0 0 0.9rem;
         }
-        .guest-static-content a {
+        .guest-static-content a:not(.btn) {
             color: var(--theme-link-color);
             text-decoration: underline;
             text-underline-offset: 0.18em;
@@ -182,15 +181,20 @@
             padding: 0;
             text-align: left;
         }
-        .guest-static-content .btn {
+        .guest-static-content a.btn {
             display: inline-block;
             margin: 0.5rem 0 1rem;
             padding: 0.7rem 1.2rem;
             border-radius: 999px;
             background: var(--theme-link-color);
-            color: var(--theme-inverse-text-color, #111827);
+            color: #ffffff;
             font-weight: 600;
             text-decoration: none;
+            box-shadow: 0 14px 32px -22px rgba(var(--theme-accent-rgb, 79, 70, 229), 0.55);
+        }
+        .guest-static-content a.btn:hover {
+            color: #ffffff;
+            filter: brightness(1.06);
         }
         .guest-static-content footer {
             margin-top: 2rem;

@@ -1,10 +1,10 @@
 @php
     $isActive = request()->routeIs('admin-marketplace.*');
     $itemClasses = $isActive
-        ? 'inline-flex h-11 w-11 items-center justify-center rounded-[0.75rem] border text-white shadow-[0_12px_24px_-18px_rgba(var(--theme-header-active-rgb),0.45)] transition'
+        ? 'inline-flex h-11 w-11 items-center justify-center rounded-[0.75rem] border text-white shadow-[0_12px_24px_-18px_rgba(var(--theme-accent-rgb),0.45)] transition'
         : 'inline-flex h-11 w-11 items-center justify-center rounded-[0.75rem] border text-slate-500 transition hover:bg-slate-50 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-slate-800/80 dark:hover:text-white';
     $itemStyle = $isActive
-        ? 'background-color: var(--theme-header-active); border-color: rgba(var(--theme-header-active-rgb), 0.22);'
+        ? 'background-color: var(--theme-accent); border-color: rgba(var(--theme-accent-rgb), 0.35);'
         : 'background-color: rgba(var(--theme-header-surface-rgb), 0.9); border-color: var(--theme-shell-border-color);';
 @endphp
 
