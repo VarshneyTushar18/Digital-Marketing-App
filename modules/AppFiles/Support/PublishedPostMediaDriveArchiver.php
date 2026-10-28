@@ -2,6 +2,7 @@
 
 namespace Modules\AppFiles\Support;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -77,12 +78,21 @@ class PublishedPostMediaDriveArchiver
                 null,
             );
 
+            $dateFolderName = $this->publishDateFolderName($post);
+
+            $dateFolderId = $this->driveUploader->findOrCreateFolder(
+                $accessToken,
+                $dateFolderName,
+                $accountFolderId,
+                null,
+            );
+
             $uploaded = [];
 
             foreach ($files as $file) {
                 $uploaded[] = $this->uploadAppFile(
                     $accessToken,
-                    $accountFolderId,
+                    $dateFolderId,
                     $file,
                     $post,
                     null,
@@ -92,6 +102,7 @@ class PublishedPostMediaDriveArchiver
             $result['drive_archive'] = [
                 'completed_at' => now()->toIso8601String(),
                 'account_folder' => $this->accountFolderName($account),
+                'date_folder' => $dateFolderName,
                 'auth' => 'oauth',
                 'uploaded' => $uploaded,
             ];
@@ -180,6 +191,18 @@ class PublishedPostMediaDriveArchiver
         $accountName = trim((string) ($account->display_name ?: $account->username ?: $account->external_id ?: 'Account'));
 
         return $this->sanitizeFolderName($providerLabel.' - '.$accountName);
+    }
+
+    protected function publishDateFolderName(PublishingPost $post): string
+    {
+        $timezone = config('app.timezone') ?: 'UTC';
+        $timestamp = (int) ($post->time_post ?: 0);
+
+        $date = $timestamp > 0
+            ? Carbon::createFromTimestamp($timestamp, $timezone)
+            : now($timezone);
+
+        return $date->format('Y-m-d');
     }
 
     protected function providerLabel(string $providerKey): string
