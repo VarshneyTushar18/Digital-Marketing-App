@@ -79,20 +79,15 @@
                     :error="$errors->first('password_confirmation')"
                 />
 
-                <x-ui.select
+                <x-ui.timezone-select
                     class="md:col-span-2"
                     wire:model.defer="timezone"
                     name="timezone"
                     :label="__('Timezone')"
                     :error="$errors->first('timezone')"
-                >
-                    <option value="">{{ __('Select your timezone') }}</option>
-                    @foreach (timezone_select_options() as $timezoneOption)
-                        <option value="{{ $timezoneOption['value'] }}" @selected($selectedTimezone === $timezoneOption['value'])>
-                            {{ $timezoneOption['label'] }}
-                        </option>
-                    @endforeach
-                </x-ui.select>
+                    :value="$selectedTimezone"
+                    :placeholder="__('Select your timezone')"
+                />
             </div>
 
             <x-ui.checkbox wire:model.defer="accept_terms" name="accept_terms" value="1" :checked="$accept_terms" labelClass="text-slate-200">
