@@ -281,19 +281,13 @@
                                     </p>
                                 </div>
 
-                                <x-ui.select
+                                <x-ui.timezone-select
                                     name="timezone"
                                     :label="__('Timezone')"
                                     :error="$errors->first('timezone')"
                                     :help="__('Used for your personal scheduling and portal timestamps.')"
-                                >
-                                    <option value="">{{ __('Select timezone') }}</option>
-                                    @foreach (($timezoneOptions ?? []) as $timezone)
-                                        <option value="{{ $timezone['value'] }}" @selected((string) old('timezone', $user->timezone) === $timezone['value'])>
-                                            {{ $timezone['label'] }}
-                                        </option>
-                                    @endforeach
-                                </x-ui.select>
+                                    :value="old('timezone', $user->timezone)"
+                                />
 
                                 <div class="rounded-[1rem] border p-4" style="border-color: var(--theme-border-color); background: var(--theme-surface-soft);">
                                     <p class="text-[11px] font-semibold uppercase tracking-[0.18em]" style="color: var(--theme-muted-text-color);">{{ __('Selected timezone') }}</p>

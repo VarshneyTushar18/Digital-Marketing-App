@@ -128,14 +128,14 @@
                                 </option>
                             @endforeach
                         </x-ui.select>
-                        <x-ui.select wire:model.defer="form.timezone" name="timezone" :label="__('Timezone')" :error="$errors->first('form.timezone')" class="md:col-span-2">
-                            <option value="">{{ __('Select timezone') }}</option>
-                            @foreach (($timezoneOptions ?? []) as $timezone)
-                                <option value="{{ $timezone['value'] }}">
-                                    {{ $timezone['label'] }}
-                                </option>
-                            @endforeach
-                        </x-ui.select>
+                        <x-ui.timezone-select
+                            wire:model.defer="form.timezone"
+                            name="timezone"
+                            :label="__('Timezone')"
+                            :error="$errors->first('form.timezone')"
+                            :value="$form['timezone'] ?? ''"
+                            class="md:col-span-2"
+                        />
                     </div>
                 </section>
 
