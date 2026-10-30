@@ -283,7 +283,7 @@
             </template>
         </div>
 
-        <div class="mt-4 xl:hidden">
+        <div class="mt-4 2xl:hidden">
             <x-ui.button type="button" variant="primary" class="w-full" x-on:click="openMobilePicker()">
                 <i class="fa-solid fa-photo-film"></i>
                 {{ $mobileButtonLabel ?: __('Select media') }}

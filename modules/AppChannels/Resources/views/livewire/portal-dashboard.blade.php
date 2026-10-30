@@ -393,9 +393,9 @@
                     <x-action-message class="text-emerald-600 dark:text-emerald-400" on="portal-account-deleted">{{ __('Channel removed.') }}</x-action-message>
                 </div>
 
-                <div class="grid min-w-0 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                <div class="grid min-w-0 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                     <?php if ($accounts->isEmpty()): ?>
-                        <div class="md:col-span-2 xl:col-span-4">
+                        <div class="md:col-span-2 xl:col-span-3 2xl:col-span-4">
                             <x-ui.empty :title="__('No channels match this view')" :description="__('Adjust the filters or connect a new channel to populate this inventory.')" />
                         </div>
                     <?php else: ?>
@@ -457,12 +457,11 @@
                                                 </span>
                                             </div>
 
-                                            <p class="mt-2 text-sm leading-6" style="color: var(--theme-muted-text-color);">
+                                            <p class="mt-2 min-w-0 space-y-0.5 text-sm leading-6" style="color: var(--theme-muted-text-color);">
                                                 <?php if ($account->username): ?>
-                                                    <span class="font-medium" style="color: {{ $providerTone['text'] }};">{{ '@'.$account->username }}</span>
-                                                    <span class="mx-2">•</span>
+                                                    <span class="block truncate font-medium" style="color: {{ $providerTone['text'] }};">{{ '@'.$account->username }}</span>
                                                 <?php endif; ?>
-                                                <span>{{ data_get($capability, 'title', $account->category ?: __('Channel')) }}</span>
+                                                <span class="block truncate">{{ data_get($capability, 'title', $account->category ?: __('Channel')) }}</span>
                                             </p>
                                         </div>
                                     </div>
@@ -474,17 +473,21 @@
                                 </div>
 
                                 <div class="mt-auto flex min-w-0 items-center gap-2 border-t pt-4" style="border-color: rgba(var(--theme-border-color-rgb), 0.54);">
+                                    <div class="flex min-w-0 flex-1 items-stretch gap-2">
                                     <?php if ($account->profile_url): ?>
-                                        <a href="{{ $account->profile_url }}" target="_blank" class="inline-flex min-w-0 flex-1 items-center justify-center rounded-[0.95rem] border px-4 py-2.5 text-sm font-medium transition" style="border-color: rgba(var(--theme-border-color-rgb), 0.56); color: var(--theme-header-text-color); background-color: rgba(var(--theme-surface-base-rgb,255,255,255),0.82); box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);">
-                                            <i class="fa-solid fa-arrow-up-right-from-square mr-1.5 text-xs"></i>{{ __('Open') }}
+                                        <a href="{{ $account->profile_url }}" target="_blank" rel="noopener noreferrer" class="inline-flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-[0.95rem] border px-2.5 py-2.5 text-sm font-medium transition" style="border-color: rgba(var(--theme-border-color-rgb), 0.56); color: var(--theme-header-text-color); background-color: rgba(var(--theme-surface-base-rgb,255,255,255),0.82); box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);">
+                                            <i class="fa-solid fa-arrow-up-right-from-square shrink-0 text-xs"></i>
+                                            <span class="truncate">{{ __('Open') }}</span>
                                         </a>
                                     <?php endif; ?>
 
                                     <?php if ($canReconnectChannels): ?>
-                                        <button type="button" wire:click="reconnectAccount({{ $account->id }})" class="inline-flex min-w-0 flex-1 items-center justify-center rounded-[0.95rem] border px-4 py-2.5 text-sm font-medium transition" style="border-color: rgba(var(--theme-border-color-rgb), 0.56); color: var(--theme-header-text-color); background-color: rgba(var(--theme-surface-base-rgb,255,255,255),0.82); box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);">
-                                            <i class="fa-solid fa-rotate-right mr-1.5 text-xs"></i>{{ __('Reconnect') }}
+                                        <button type="button" wire:click="reconnectAccount({{ $account->id }})" class="inline-flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-[0.95rem] border px-2.5 py-2.5 text-sm font-medium transition" style="border-color: rgba(var(--theme-border-color-rgb), 0.56); color: var(--theme-header-text-color); background-color: rgba(var(--theme-surface-base-rgb,255,255,255),0.82); box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);">
+                                            <i class="fa-solid fa-rotate-right shrink-0 text-xs"></i>
+                                            <span class="truncate">{{ __('Reconnect') }}</span>
                                         </button>
                                     <?php endif; ?>
+                                    </div>
 
                                     <?php if ($canToggleChannelStatus || $canDeleteChannels): ?>
                                         <div x-data="{ open: false }" class="relative" x-on:click.outside="open = false" x-on:keydown.escape.window="open = false">
