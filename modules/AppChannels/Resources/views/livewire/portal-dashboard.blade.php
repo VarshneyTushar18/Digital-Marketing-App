@@ -360,7 +360,7 @@
                             <x-ui.dropdown-menu align="right" width="auto" class="min-w-[10.5rem]">
                                 <x-slot:trigger>
                                     <x-ui.button type="button" class="w-full justify-center px-3 text-center whitespace-normal sm:w-auto" :disabled="$selectedAccountCount === 0">
-                                        <i class="fa-solid fa-grid-2"></i>
+                                        <i class="fa-solid fa-ellipsis"></i>
                                         {{ __('Actions') }}
                                     </x-ui.button>
                                 </x-slot:trigger>
@@ -475,24 +475,24 @@
                                 <div class="mt-auto flex min-w-0 items-center gap-2 border-t pt-4" style="border-color: rgba(var(--theme-border-color-rgb), 0.54);">
                                     <div class="flex min-w-0 flex-1 items-stretch gap-2">
                                     <?php if ($account->profile_url): ?>
-                                        <a href="{{ $account->profile_url }}" target="_blank" rel="noopener noreferrer" class="inline-flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-[0.95rem] border px-2.5 py-2.5 text-sm font-medium transition" style="border-color: rgba(var(--theme-border-color-rgb), 0.56); color: var(--theme-header-text-color); background-color: rgba(var(--theme-surface-base-rgb,255,255,255),0.82); box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);">
+                                        <a href="{{ $account->profile_url }}" target="_blank" rel="noopener noreferrer" class="inline-flex h-[2.875rem] min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-[0.95rem] border px-2 py-2.5 text-xs font-medium transition sm:px-2.5 sm:text-sm" style="border-color: rgba(var(--theme-border-color-rgb), 0.56); color: var(--theme-header-text-color); background-color: rgba(var(--theme-surface-base-rgb,255,255,255),0.82); box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);">
                                             <i class="fa-solid fa-arrow-up-right-from-square shrink-0 text-xs"></i>
-                                            <span class="truncate">{{ __('Open') }}</span>
+                                            <span>{{ __('Open') }}</span>
                                         </a>
                                     <?php endif; ?>
 
                                     <?php if ($canReconnectChannels): ?>
-                                        <button type="button" wire:click="reconnectAccount({{ $account->id }})" class="inline-flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-[0.95rem] border px-2.5 py-2.5 text-sm font-medium transition" style="border-color: rgba(var(--theme-border-color-rgb), 0.56); color: var(--theme-header-text-color); background-color: rgba(var(--theme-surface-base-rgb,255,255,255),0.82); box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);">
+                                        <button type="button" wire:click="reconnectAccount({{ $account->id }})" class="inline-flex h-[2.875rem] min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-[0.95rem] border px-2 py-2.5 text-xs font-medium transition sm:px-2.5 sm:text-sm" style="border-color: rgba(var(--theme-border-color-rgb), 0.56); color: var(--theme-header-text-color); background-color: rgba(var(--theme-surface-base-rgb,255,255,255),0.82); box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);">
                                             <i class="fa-solid fa-rotate-right shrink-0 text-xs"></i>
-                                            <span class="truncate">{{ __('Reconnect') }}</span>
+                                            <span>{{ __('Reconnect') }}</span>
                                         </button>
                                     <?php endif; ?>
                                     </div>
 
                                     <?php if ($canToggleChannelStatus || $canDeleteChannels): ?>
-                                        <div x-data="{ open: false }" class="relative" x-on:click.outside="open = false" x-on:keydown.escape.window="open = false">
-                                            <button type="button" x-on:click="open = !open" class="inline-flex h-[2.875rem] w-[2.875rem] shrink-0 items-center justify-center rounded-[0.95rem] border text-sm font-medium transition" style="border-color: rgba(var(--theme-border-color-rgb), 0.56); color: var(--theme-header-text-color); background-color: rgba(var(--theme-surface-base-rgb,255,255,255),0.82); box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);">
-                                                <i class="fa-solid fa-grid-2 text-xs"></i>
+                                        <div x-data="{ open: false }" class="relative shrink-0" x-on:click.outside="open = false" x-on:keydown.escape.window="open = false">
+                                            <button type="button" x-on:click="open = !open" class="inline-flex h-[2.875rem] w-[2.875rem] shrink-0 items-center justify-center rounded-[0.95rem] border text-sm font-medium transition" style="border-color: rgba(var(--theme-border-color-rgb), 0.56); color: var(--theme-header-text-color); background-color: rgba(var(--theme-surface-base-rgb,255,255,255),0.82); box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);" aria-label="{{ __('Channel actions') }}" title="{{ __('Channel actions') }}">
+                                                <i class="fa-solid fa-ellipsis-vertical text-sm" aria-hidden="true"></i>
                                             </button>
 
                                             <div x-cloak x-show="open" x-transition.origin.bottom.right class="absolute bottom-full right-0 z-50 mb-2 w-48 overflow-hidden rounded-[1rem] border p-1.5 shadow-[0_22px_42px_-20px_rgba(15,23,42,0.24)]" style="border-color: color-mix(in srgb, var(--theme-border-color) 78%, transparent 22%); background:

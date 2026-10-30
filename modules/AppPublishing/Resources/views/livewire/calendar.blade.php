@@ -2331,7 +2331,7 @@
     </div>
     @endif
 
-    <div class="{{ $composerOpen ? 'fixed' : 'hidden' }} inset-0 z-[140]" x-data="{ mobilePreviewOpen: false, mobileMediaOpen: false }" x-on:attached-media:open-mobile.window="mobileMediaOpen = true">
+    <div class="{{ $composerOpen ? 'fixed' : 'hidden' }} inset-0 z-[140]" x-data="{ mobilePreviewOpen: false, mobileMediaOpen: false }" x-on:attached-media:open-mobile.window="mobileMediaOpen = true" x-on:media-browser:change.window="if ($event.detail?.model === 'composer.media_items' && mobileMediaOpen) mobileMediaOpen = false">
         <div class="absolute inset-0 bg-slate-950/45 backdrop-blur-[3px]" x-on:click="closeComposerLocal()"></div>
 
         <div class="absolute inset-3 flex min-h-0 flex-col overflow-hidden rounded-[1.35rem] border shadow-[0_32px_90px_-36px_rgba(15,23,42,0.42)]" style="border-color: rgba(var(--theme-border-color-rgb), 0.68); background-color: var(--theme-surface-base);">
@@ -2386,6 +2386,7 @@
                                 :show-library-header="false"
                                 :frameless="true"
                                 :compact-toolbar="true"
+                                library-grid-class="grid-cols-2 gap-2.5 2xl:grid-cols-3"
                             />
                         @else
                             <div wire:init="loadComposerMediaBrowser" class="flex h-full min-h-[16rem] items-center justify-center">
@@ -3260,6 +3261,7 @@
                                     :show-library-header="false"
                                     :frameless="true"
                                     :compact-toolbar="true"
+                                    library-grid-class="grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
                                 />
                             @else
                                 <div wire:init="loadComposerMediaBrowser" class="flex h-full min-h-[14rem] items-center justify-center">

@@ -196,7 +196,7 @@ class RssScheduleForm extends Component
         $this->campaign_id = filled(data_get($settings, 'campaign_id')) ? (string) data_get($settings, 'campaign_id') : '';
         $this->label_ids = collect((array) data_get($settings, 'label_ids', []))->map(fn ($id) => (string) $id)->values()->all();
         $this->time_posts = collect((array) $schedule->time_posts)->map(fn ($slot) => (string) $slot)->filter()->values()->all();
-        $this->weekdays = collect((array) $schedule->weekdays)->filter()->keys()->values()->all();
+        $this->weekdays = $this->normalizeWeekdaySelection((array) $schedule->weekdays);
         $this->start_date = $schedule->start_at ? \Carbon\Carbon::createFromTimestamp((int) $schedule->start_at, $timezone)->toDateString() : '';
         $this->end_date = $schedule->end_at ? \Carbon\Carbon::createFromTimestamp((int) $schedule->end_at, $timezone)->toDateString() : '';
         $this->accept_caption = (bool) data_get($settings, 'accept_caption', true);
@@ -212,6 +212,30 @@ class RssScheduleForm extends Component
         $this->include_keywords = (string) data_get($settings, 'include_keywords', '');
         $this->ignore_keywords = (string) data_get($settings, 'ignore_keywords', '');
         $this->status = (bool) $schedule->status;
+    }
+
+    protected function normalizeWeekdaySelection(array $raw): array
+    {
+        $order = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+        if ($raw === []) {
+            return [];
+        }
+
+        if (array_is_list($raw)) {
+            return collect($raw)
+                ->map(fn ($day) => (string) $day)
+                ->filter(fn ($day) => in_array($day, $order, true))
+                ->unique()
+                ->sortBy(fn ($day) => array_search($day, $order, true))
+                ->values()
+                ->all();
+        }
+
+        return collect($order)
+            ->filter(fn ($day) => (bool) ($raw[$day] ?? false))
+            ->values()
+            ->all();
     }
 
     protected function toneOptions(): array

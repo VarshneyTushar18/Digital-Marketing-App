@@ -14,6 +14,7 @@
     'frameless' => false,
     'showLibraryHeader' => true,
     'compactToolbar' => false,
+    'libraryGridClass' => null,
 ])
 
 @php
@@ -87,6 +88,8 @@
     $oneDrivePickerConfig = $fileManager->oneDrivePickerConfig(auth()->user());
     $adobeExpressConfig = $fileManager->adobeExpressConfig(auth()->user());
     $wireModel = $attributes->get('wire:model.live') ?: $attributes->get('wire:model');
+    $compactLibraryGrid = $compactToolbar && $frameless && $layout === 'library';
+    $compactLibraryGridClassList = trim((string) ($libraryGridClass ?: 'grid-cols-4 gap-2 sm:grid-cols-5'));
 @endphp
 
 @include('appfiles::partials.google-picker-script')
@@ -1372,7 +1375,7 @@
                     <template x-if="folders.length">
                         <div class="{{ $compactToolbar ? 'mb-3' : 'mb-4' }}">
                             <p class="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em]" style="color: var(--theme-muted-text-color);">{{ __('Folders') }}</p>
-                            <div class="{{ $compactToolbar ? 'grid grid-cols-3 gap-2.5' : 'space-y-3' }}">
+                            <div class="{{ $compactLibraryGrid ? 'grid '.$compactLibraryGridClassList : ($compactToolbar ? 'grid grid-cols-3 gap-2.5' : 'space-y-3') }}">
                                 <template x-for="folder in folders" :key="'folder-'+folder.idSecure">
                                     <div class="group relative {{ $compactToolbar ? 'rounded-[1rem] border p-2.5 transition hover:-translate-y-0.5' : 'rounded-[1rem] border px-3 py-3 transition hover:-translate-y-0.5' }}" style="border-color: rgba(var(--theme-border-color-rgb), 0.68); background-color: rgba(var(--theme-surface-base-rgb,255,255,255),0.96);">
                                         <div class="absolute right-2 top-2 z-10 opacity-0 transition group-hover:opacity-100" x-data="{ open: false }" x-on:click.outside="open = false">
@@ -1404,7 +1407,7 @@
                     <div>
                         <p class="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em]" style="color: var(--theme-muted-text-color);">{{ __('Files') }}</p>
                         <template x-if="files.length">
-                            <div class="grid {{ $compactToolbar ? 'grid-cols-3 gap-2.5' : 'gap-3 sm:grid-cols-2' }}">
+                            <div class="grid {{ $compactLibraryGrid ? $compactLibraryGridClassList : ($compactToolbar ? 'grid-cols-3 gap-2.5' : 'gap-3 sm:grid-cols-2') }}">
                                 <template x-for="file in files" :key="'file-'+file.id">
                                     <div
                                         class="group relative rounded-[1rem] border text-left transition hover:-translate-y-0.5"
@@ -1432,7 +1435,7 @@
                                             x-on:click="choose(file)"
                                             x-on:dragstart="handleDragStart(file, $event)"
                                         >
-                                        <div class="relative aspect-square overflow-hidden rounded-t-[1rem]" style="background-color: rgba(var(--theme-border-color-rgb), 0.04);">
+                                        <div class="relative aspect-square w-full overflow-hidden rounded-t-[1rem]" style="background-color: rgba(var(--theme-border-color-rgb), 0.04);">
                                             <template x-if="isRenderableImage(file)">
                                                 <div class="relative h-full w-full overflow-hidden rounded-t-[1rem]">
                                                     <div
@@ -1462,12 +1465,12 @@
                                                         x-bind:class="isImageLoaded(file, 'library-grid') ? 'opacity-100' : 'opacity-0'"
                                                         loading="lazy"
                                                         decoding="async"
-                                                        class="h-full w-full rounded-t-[1rem] object-cover transition duration-300 group-hover:scale-[1.03]"
+                                                        class="h-full w-full rounded-t-[1rem] {{ $compactLibraryGrid ? 'object-contain p-1.5' : 'object-cover' }} transition duration-300 {{ $compactLibraryGrid ? '' : 'group-hover:scale-[1.03]' }}"
                                                     >
                                                 </div>
                                             </template>
                                             <template x-if="!isRenderableImage(file) && isRenderableVideo(file)">
-                                                <video x-bind:src="file.previewUrl || file.url" preload="metadata" muted playsinline class="h-full w-full object-cover"></video>
+                                                <video x-bind:src="file.previewUrl || file.url" preload="metadata" muted playsinline class="h-full w-full {{ $compactLibraryGrid ? 'object-contain p-1.5' : 'object-cover' }}"></video>
                                             </template>
                                             <template x-if="!isRenderableImage(file) && !isRenderableVideo(file)">
                                                 <div class="flex h-full w-full items-center justify-center">
@@ -1705,7 +1708,7 @@
                                             x-on:click="choose(file)"
                                             x-on:dragstart="handleDragStart(file, $event)"
                                         >
-                                        <div class="relative aspect-square overflow-hidden rounded-t-[1rem]" style="background-color: rgba(var(--theme-border-color-rgb), 0.04);">
+                                        <div class="relative aspect-square w-full overflow-hidden rounded-t-[1rem]" style="background-color: rgba(var(--theme-border-color-rgb), 0.04);">
                                             <template x-if="isRenderableImage(file)">
                                                 <div class="relative h-full w-full overflow-hidden rounded-t-[1rem]">
                                                     <div
@@ -1740,7 +1743,7 @@
                                                 </div>
                                             </template>
                                             <template x-if="!isRenderableImage(file) && isRenderableVideo(file)">
-                                                <video x-bind:src="file.previewUrl || file.url" preload="metadata" muted playsinline class="h-full w-full object-cover"></video>
+                                                <video x-bind:src="file.previewUrl || file.url" preload="metadata" muted playsinline class="h-full w-full {{ $compactLibraryGrid ? 'object-contain p-1.5' : 'object-cover' }}"></video>
                                             </template>
                                             <template x-if="!isRenderableImage(file) && !isRenderableVideo(file)">
                                                 <div class="flex h-full w-full items-center justify-center">

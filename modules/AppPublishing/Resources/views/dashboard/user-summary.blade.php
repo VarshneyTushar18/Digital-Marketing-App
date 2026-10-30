@@ -59,9 +59,9 @@
                     </div>
                 </div>
 
-                <div class="grid min-w-0 gap-5 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+                <div class="grid min-w-0 gap-5 2xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
                 <div class="min-w-0 space-y-4">
-                    <div class="grid min-w-0 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                    <div class="grid min-w-0 gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-2">
                         <x-ui.card padding="md" style="border-color: rgba(91,124,250,0.16); background: color-mix(in srgb, var(--theme-surface-overlay) 90%, transparent); box-shadow: 0 18px 38px -34px rgba(91,124,250,0.32);">
                             <span class="mb-4 block h-1.5 w-11 rounded-full" style="background: linear-gradient(90deg, rgba(91,124,250,0.95), rgba(91,124,250,0.28));"></span>
                             <p class="text-[2rem] font-semibold tracking-[-0.04em]" style="color: var(--theme-header-text-color);">{{ number_format((int) ($metrics['month_total'] ?? 0)) }}</p>
@@ -91,7 +91,7 @@
                         </x-ui.card>
                     </div>
 
-                    <div class="grid min-w-0 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                    <div class="grid min-w-0 gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-2">
                         <x-ui.card padding="md" style="border-color: rgba(242,139,130,0.18); background: color-mix(in srgb, var(--theme-surface-overlay) 90%, transparent); box-shadow: 0 18px 38px -34px rgba(242,139,130,0.28);">
                             <span class="mb-4 block h-1.5 w-11 rounded-full" style="background: linear-gradient(90deg, rgba(242,139,130,0.94), rgba(242,139,130,0.22));"></span>
                             <p class="text-[2rem] font-semibold tracking-[-0.04em]" style="color: var(--theme-header-text-color);">{{ number_format((int) ($metrics['failed'] ?? 0)) }}</p>
@@ -178,7 +178,7 @@
                     </div>
 
                     @if ($trendTotal > 0)
-                        <div class="grid min-h-[22rem] items-end gap-3 sm:grid-cols-7">
+                        <div class="grid min-h-[22rem] grid-cols-2 items-end gap-3 sm:grid-cols-4 md:grid-cols-7">
                             @foreach (($chart['categories'] ?? []) as $index => $label)
                                 @php
                                     $dayCount = (int) ($trendData[$index] ?? 0);
