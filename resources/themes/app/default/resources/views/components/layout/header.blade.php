@@ -24,7 +24,7 @@
             @endif
 
             @if (count($middleNavItems) > 0)
-                <div class="ml-2 xl:hidden">
+                <div class="ml-2 2xl:hidden">
                     <x-ui.dropdown-menu align="left" width="auto">
                         <x-slot:trigger>
                             <button
@@ -127,8 +127,8 @@
         </div>
 
         @if (count($middleNavItems) > 0)
-            <div class="absolute left-1/2 top-1/2 hidden min-w-0 -translate-x-1/2 -translate-y-1/2 items-center justify-center px-4 xl:flex">
-                <nav class="flex min-w-0 items-center gap-1 overflow-x-auto rounded-[0.75rem] border border-slate-200/70 p-1.5 shadow-[0_16px_30px_-28px_rgba(15,23,42,0.24)] dark:border-slate-800" style="background-color: rgba(var(--theme-header-surface-rgb), 0.9); border-color: var(--theme-shell-border-color);">
+            <div class="pointer-events-none absolute left-1/2 top-1/2 hidden min-w-0 max-w-[min(40rem,calc(100vw-26rem))] -translate-x-1/2 -translate-y-1/2 items-center justify-center px-4 2xl:flex">
+                <nav class="pointer-events-auto flex min-w-0 max-w-full items-center gap-1 overflow-x-auto rounded-[0.75rem] border border-slate-200/70 p-1.5 shadow-[0_16px_30px_-28px_rgba(15,23,42,0.24)] dark:border-slate-800" style="background-color: rgba(var(--theme-header-surface-rgb), 0.9); border-color: var(--theme-shell-border-color);">
                     @foreach ($middleNavItems as $item)
                         @if (! empty($item['html']))
                             {!! $item['html'] !!}
@@ -174,7 +174,7 @@
             </div>
         @endif
 
-        <div class="ml-auto flex items-center gap-2.5 md:gap-3">
+        <div class="relative z-10 ml-auto flex shrink-0 items-center gap-2.5 md:gap-3">
             @if (trim((string) ($center ?? '')) !== '')
                 <div class="hidden h-11 items-center gap-1 rounded-[0.75rem] border border-slate-200/70 px-1.5 shadow-[0_12px_24px_-20px_rgba(15,23,42,0.2)] dark:border-slate-800 md:flex" style="background-color: rgba(var(--theme-header-surface-rgb), 0.9); border-color: var(--theme-shell-border-color);">
                     {{ $center ?? '' }}

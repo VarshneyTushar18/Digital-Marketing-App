@@ -3224,7 +3224,7 @@
                 x-cloak
                 x-show="mobileMediaOpen"
                 x-transition.opacity
-                class="absolute inset-x-0 top-[5.375rem] bottom-[5.25rem] z-20 xl:hidden"
+                class="absolute inset-x-0 top-[5.375rem] bottom-[5.25rem] z-20 2xl:hidden"
             >
                 <div class="absolute inset-0 bg-slate-950/12" x-on:click="mobileMediaOpen = false"></div>
 
