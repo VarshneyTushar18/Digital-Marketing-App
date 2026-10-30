@@ -27,7 +27,7 @@
                         <p class="mt-1 text-sm" style="color: var(--theme-muted-text-color);">{{ __('Source, channels, rules, and recurring times.') }}</p>
                     </div>
                     <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style="background: rgba(var(--theme-accent-rgb), 0.10); color: var(--theme-accent-color);">
-                        <i class="fa-solid fa-arrows-repeat text-lg"></i>
+                        <i class="fa-solid fa-arrows-rotate text-lg"></i>
                     </span>
                 </div>
 
@@ -242,7 +242,7 @@
                 <div class="border-b px-5 py-4 sm:px-6" style="border-color: rgba(var(--theme-border-color-rgb), 0.68);">
                     <div class="flex items-start gap-3">
                         <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl" style="background: rgba(245,158,11,0.12); color: rgb(217,119,6);">
-                            <i class="fa-solid fa-calendar-clock"></i>
+                            <i class="fa-solid fa-calendar-days"></i>
                         </span>
                         <div>
                             <p class="text-lg font-semibold" style="color: var(--theme-header-text-color);">{{ __('Schedule Regularly') }}</p>
@@ -297,12 +297,12 @@
 
                     <div class="space-y-3">
                         <x-ui.label>{{ __('Schedule every') }}</x-ui.label>
-                        <div class="grid gap-3 md:grid-cols-7">
+                        <div class="grid min-w-0 grid-cols-7 gap-1.5 sm:gap-2">
                             @foreach (['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as $day)
                                 <button
                                     type="button"
                                     x-on:click="toggleDay('{{ $day }}')"
-                                    class="rounded-[0.95rem] border px-3 py-5 text-sm font-medium transition"
+                                    class="min-w-0 rounded-[0.95rem] border px-1 py-3 text-center text-[11px] font-medium leading-none transition sm:px-1.5 sm:py-4 sm:text-xs"
                                     x-bind:style="hasDay('{{ $day }}')
                                         ? 'border-color: transparent; background-color: var(--theme-accent); color: white;'
                                         : 'border-color: rgba(var(--theme-border-color-rgb), 0.68); background-color: rgba(var(--theme-surface-base-rgb,255,255,255),0.96); color: var(--theme-header-text-color);'"

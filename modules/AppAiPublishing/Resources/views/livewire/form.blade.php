@@ -309,12 +309,12 @@
 
                     <div class="space-y-3">
                         <x-ui.label>{{ __('Schedule every') }}</x-ui.label>
-                        <div class="grid gap-3 md:grid-cols-7">
+                        <div class="grid min-w-0 grid-cols-7 gap-1.5 sm:gap-2">
                             @foreach ($weekdayOptions as $option)
                                 <button
                                     type="button"
                                     x-on:click="toggleDay('{{ $option['key'] }}')"
-                                    class="rounded-[0.95rem] border px-3 py-5 text-sm font-medium transition"
+                                    class="min-w-0 rounded-[0.95rem] border px-1 py-3 text-center text-[11px] font-medium leading-none transition sm:px-1.5 sm:py-4 sm:text-xs"
                                     x-bind:style="hasDay('{{ $option['key'] }}')
                                         ? 'border-color: transparent; background-color: var(--theme-accent); color: white;'
                                         : 'border-color: rgba(var(--theme-border-color-rgb), 0.68); background-color: rgba(var(--theme-surface-base-rgb,255,255,255),0.96); color: var(--theme-header-text-color);'"
