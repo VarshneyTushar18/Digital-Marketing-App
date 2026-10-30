@@ -127,8 +127,8 @@
         </div>
 
         @if (count($middleNavItems) > 0)
-            <div class="pointer-events-none absolute left-1/2 top-1/2 hidden min-w-0 max-w-[min(40rem,calc(100vw-26rem))] -translate-x-1/2 -translate-y-1/2 items-center justify-center px-4 2xl:flex">
-                <nav class="pointer-events-auto flex min-w-0 max-w-full items-center gap-1 overflow-x-auto rounded-[0.75rem] border border-slate-200/70 p-1.5 shadow-[0_16px_30px_-28px_rgba(15,23,42,0.24)] dark:border-slate-800" style="background-color: rgba(var(--theme-header-surface-rgb), 0.9); border-color: var(--theme-shell-border-color);">
+            <div class="pointer-events-none absolute left-1/2 top-1/2 hidden min-w-0 max-w-[min(54rem,calc(100vw-17rem))] -translate-x-1/2 -translate-y-1/2 items-center justify-center px-4 2xl:flex">
+                <nav class="pointer-events-auto flex w-max max-w-full flex-nowrap items-center gap-0.5 rounded-[0.75rem] border border-slate-200/70 p-1.5 shadow-[0_16px_30px_-28px_rgba(15,23,42,0.24)] dark:border-slate-800" style="background-color: rgba(var(--theme-header-surface-rgb), 0.9); border-color: var(--theme-shell-border-color);">
                     @foreach ($middleNavItems as $item)
                         @if (! empty($item['html']))
                             {!! $item['html'] !!}
@@ -140,7 +140,7 @@
                                 $itemActiveClasses = ($item['active'] ?? false)
                                     ? 'bg-[var(--theme-header-active)] text-[var(--theme-card-contrast-text)] shadow-[0_12px_24px_-18px_rgba(var(--theme-header-active-rgb),0.45)]'
                                     : 'text-slate-500 hover:bg-slate-50 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-slate-800/80 dark:hover:text-white';
-                                $itemClasses = $itemActiveClasses.' inline-flex items-center gap-2 rounded-[0.65rem] px-3.5 py-2 text-sm font-semibold transition';
+                                $itemClasses = $itemActiveClasses.' inline-flex shrink-0 items-center gap-1.5 rounded-[0.65rem] px-2.5 py-1.5 text-[13px] font-semibold leading-none transition 2xl:text-sm';
                             @endphp
                             @if (! empty($item['route']))
                                 <a

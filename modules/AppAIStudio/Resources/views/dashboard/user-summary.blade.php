@@ -28,9 +28,9 @@
                 </div>
             </div>
 
-            <div class="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+            <div class="grid min-w-0 gap-4 2xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
             <div class="min-w-0 space-y-4">
-                <div class="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                <div class="grid min-w-0 gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-2">
                     @foreach ($tools as $tool)
                         <a href="{{ $tool['route'] }}" wire:navigate class="min-w-0 max-w-full rounded-[1rem] border p-4 transition hover:-translate-y-[1px]" style="border-color: rgba(var(--theme-border-color-rgb),0.56); background: color-mix(in srgb, var(--theme-surface-overlay) 92%, transparent); box-shadow: 0 18px 34px -34px rgba(var(--theme-accent-rgb),0.18);">
                             <span class="inline-flex h-11 w-11 items-center justify-center rounded-[0.9rem]" style="background: rgba(var(--theme-accent-rgb),0.10); color: var(--theme-accent);">
