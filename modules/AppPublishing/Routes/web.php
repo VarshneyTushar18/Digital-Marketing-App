@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\AppPublishing\Http\Controllers\PostApprovalEmailController;
 use Modules\AppPublishing\Livewire\PublishingCalendar;
 use Modules\AppPublishing\Livewire\PublishingCampaigns;
 use Modules\AppPublishing\Livewire\PublishingApprovals;
@@ -17,6 +18,12 @@ Route::middleware(['web', 'auth', 'verified'])->group(function (): void {
         ->name('portal.publishing.queue');
     Route::livewire('portal/publishing/approvals', PublishingApprovals::class)
         ->name('portal.publishing.approvals');
+    Route::get('portal/publishing/approvals/email/{review}/approve', [PostApprovalEmailController::class, 'approveFromEmail'])
+        ->middleware('signed')
+        ->name('portal.publishing.approve-from-email');
+    Route::get('portal/publishing/approvals/email/{review}/reject', [PostApprovalEmailController::class, 'rejectFromEmail'])
+        ->middleware('signed')
+        ->name('portal.publishing.reject-from-email');
     Route::livewire('portal/publishing/campaigns', PublishingCampaigns::class)
         ->name('portal.publishing.campaigns');
     Route::livewire('portal/publishing/labels', PublishingLabels::class)

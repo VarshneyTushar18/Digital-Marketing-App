@@ -25,7 +25,7 @@ use Modules\AppTeams\Models\TeamPostReview;
 use Modules\AppTeams\Support\TeamPermissionRegistry;
 use Modules\AppTeams\Support\TeamWorkspaceAccess;
 use Modules\AppPublishing\Models\PublishingPost;
-use Modules\AppPublishing\Jobs\PublishScheduledPostJob;
+use Modules\AppPublishing\Services\ApproveTeamPostReview;
 
 #[Title('Teams')]
 class Workspace extends Component
@@ -499,30 +499,19 @@ class Workspace extends Component
             ->where('status', 'pending')
             ->findOrFail($reviewId);
 
-        $requestedStatus = (int) ($review->metadata['requested_status'] ?? PublishingPost::STATUS_SCHEDULED);
-
-        $review->post?->update([
-            'status' => $requestedStatus,
-            'changed' => now()->timestamp,
-        ]);
-
-        if (
-            $review->post
-            && $requestedStatus === PublishingPost::STATUS_SCHEDULED
-            && (string) ($review->metadata['schedule_mode'] ?? '') === 'immediately'
-        ) {
-            PublishScheduledPostJob::dispatchSync((int) $review->post->id);
-        }
-
-        $review->update([
-            'status' => 'approved',
-            'decided_by_user_id' => $this->user()->id,
-            'decision_note' => trim((string) ($this->reviewNotes[$reviewId] ?? '')) ?: null,
-            'decided_at' => now(),
-        ]);
+        $result = app(ApproveTeamPostReview::class)->approve(
+            $review,
+            $this->user(),
+            trim((string) ($this->reviewNotes[$reviewId] ?? '')) ?: null
+        );
 
         unset($this->reviewNotes[$reviewId]);
-        $this->notifySuccess(__('Approval item approved successfully.'));
+
+        $this->notifySuccess(
+            $result['publish_immediately']
+                ? __('Approval item approved. Publishing now—check the calendar for status.')
+                : __('Approval item approved successfully.')
+        );
     }
 
     public function rejectReview(int $reviewId): void
@@ -535,17 +524,11 @@ class Workspace extends Component
             ->where('status', 'pending')
             ->findOrFail($reviewId);
 
-        $review->post?->update([
-            'status' => PublishingPost::STATUS_DRAFT,
-            'changed' => now()->timestamp,
-        ]);
-
-        $review->update([
-            'status' => 'rejected',
-            'decided_by_user_id' => $this->user()->id,
-            'decision_note' => trim((string) ($this->reviewNotes[$reviewId] ?? '')) ?: null,
-            'decided_at' => now(),
-        ]);
+        app(ApproveTeamPostReview::class)->reject(
+            $review,
+            $this->user(),
+            trim((string) ($this->reviewNotes[$reviewId] ?? '')) ?: null
+        );
 
         unset($this->reviewNotes[$reviewId]);
         $this->notifySuccess(__('Approval item rejected successfully.'));

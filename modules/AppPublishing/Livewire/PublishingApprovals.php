@@ -13,8 +13,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Modules\AdminUser\Models\Team;
 use Modules\AppChannels\Models\SocialAccount;
-use Modules\AppPublishing\Jobs\PublishScheduledPostJob;
-use Modules\AppPublishing\Models\PublishingPost;
+use Modules\AppPublishing\Services\ApproveTeamPostReview;
 use Modules\AppTeams\Models\TeamPostReview;
 use Modules\AppTeams\Support\TeamWorkspaceAccess;
 
@@ -60,31 +59,23 @@ class PublishingApprovals extends Component
             ->where('status', 'pending')
             ->findOrFail($reviewId);
 
-        $requestedStatus = (int) ($review->metadata['requested_status'] ?? PublishingPost::STATUS_SCHEDULED);
-
-        $review->post?->update([
-            'status' => $requestedStatus,
-            'changed' => now()->timestamp,
-        ]);
-
-        if (
-            $review->post
-            && $requestedStatus === PublishingPost::STATUS_SCHEDULED
-            && (string) ($review->metadata['schedule_mode'] ?? '') === 'immediately'
-        ) {
-            PublishScheduledPostJob::dispatchSync((int) $review->post->id);
-        }
-
-        $review->update([
-            'status' => 'approved',
-            'decided_by_user_id' => (int) auth()->id(),
-            'decision_note' => trim((string) ($this->reviewNotes[$reviewId] ?? '')) ?: null,
-            'decided_at' => now(),
-        ]);
+        $result = app(ApproveTeamPostReview::class)->approve(
+            $review,
+            auth()->user(),
+            trim((string) ($this->reviewNotes[$reviewId] ?? '')) ?: null
+        );
 
         unset($this->reviewNotes[$reviewId]);
         $this->invalidatePublishingCalendarCache();
-        $this->dispatch('app-toast', type: 'success', title: __('Post approved'), message: __('The publishing item has been approved and returned to the queue.'));
+
+        $this->dispatch(
+            'app-toast',
+            type: 'success',
+            title: __('Post approved'),
+            message: $result['publish_immediately']
+                ? __('The post is approved and is publishing now. Check the calendar for status.')
+                : __('The publishing item has been approved and returned to the queue.')
+        );
         $this->resetPage();
     }
 
@@ -100,17 +91,11 @@ class PublishingApprovals extends Component
             ->where('status', 'pending')
             ->findOrFail($reviewId);
 
-        $review->post?->update([
-            'status' => PublishingPost::STATUS_DRAFT,
-            'changed' => now()->timestamp,
-        ]);
-
-        $review->update([
-            'status' => 'rejected',
-            'decided_by_user_id' => (int) auth()->id(),
-            'decision_note' => trim((string) ($this->reviewNotes[$reviewId] ?? '')) ?: null,
-            'decided_at' => now(),
-        ]);
+        app(ApproveTeamPostReview::class)->reject(
+            $review,
+            auth()->user(),
+            trim((string) ($this->reviewNotes[$reviewId] ?? '')) ?: null
+        );
 
         unset($this->reviewNotes[$reviewId]);
         $this->invalidatePublishingCalendarCache();

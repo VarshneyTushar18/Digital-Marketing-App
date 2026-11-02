@@ -24,6 +24,7 @@ use Modules\AppPublishing\Models\PublishingCampaign;
 use Modules\AppPublishing\Models\PublishingLabel;
 use Modules\AppPublishing\Models\PublishingPost;
 use Modules\AppPublishing\Jobs\PublishScheduledPostJob;
+use Modules\AppPublishing\Jobs\NotifyPostApproversJob;
 use Modules\AppPublishing\Services\Publishing\PostPublishService;
 use Modules\AppPublishing\Support\PublishingContentValidationRegistry;
 use Modules\AppPublishing\Support\PublishingMediaValidationRegistry;
@@ -1259,7 +1260,7 @@ class PublishingCalendar extends Component
             $editingPost->save();
 
             if ($requiresApproval && $editingPost->team_id) {
-                TeamPostReview::query()->updateOrCreate(
+                $review = TeamPostReview::query()->updateOrCreate(
                     ['post_id' => $editingPost->id],
                     [
                         'team_id' => $editingPost->team_id,
@@ -1276,6 +1277,8 @@ class PublishingCalendar extends Component
                         ],
                     ],
                 );
+
+                NotifyPostApproversJob::dispatch((int) $review->id)->afterResponse();
             } else {
                 TeamPostReview::query()->where('post_id', $editingPost->id)->delete();
             }
@@ -1351,7 +1354,7 @@ class PublishingCalendar extends Component
                 ]);
 
                     if ($requiresApproval && $post->team_id) {
-                        TeamPostReview::query()->create([
+                        $review = TeamPostReview::query()->create([
                         'team_id' => $post->team_id,
                         'post_id' => $post->id,
                         'submitted_by_user_id' => (int) auth()->id(),
@@ -1363,6 +1366,8 @@ class PublishingCalendar extends Component
                             'schedule_slot_index' => $slotIndex,
                         ],
                     ]);
+
+                        NotifyPostApproversJob::dispatch((int) $review->id)->afterResponse();
                     }
 
                     if ($publishImmediately) {
