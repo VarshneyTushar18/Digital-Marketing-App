@@ -62,18 +62,14 @@ class PublishingApprovals extends Component
 
         $requestedStatus = (int) ($review->metadata['requested_status'] ?? PublishingPost::STATUS_SCHEDULED);
 
+        $publishImmediately = $review->post
+            && $requestedStatus === PublishingPost::STATUS_SCHEDULED
+            && (string) ($review->metadata['schedule_mode'] ?? '') === 'immediately';
+
         $review->post?->update([
             'status' => $requestedStatus,
             'changed' => now()->timestamp,
         ]);
-
-        if (
-            $review->post
-            && $requestedStatus === PublishingPost::STATUS_SCHEDULED
-            && (string) ($review->metadata['schedule_mode'] ?? '') === 'immediately'
-        ) {
-            PublishScheduledPostJob::dispatchSync((int) $review->post->id);
-        }
 
         $review->update([
             'status' => 'approved',
@@ -84,7 +80,16 @@ class PublishingApprovals extends Component
 
         unset($this->reviewNotes[$reviewId]);
         $this->invalidatePublishingCalendarCache();
-        $this->dispatch('app-toast', type: 'success', title: __('Post approved'), message: __('The publishing item has been approved and returned to the queue.'));
+
+        if ($publishImmediately) {
+            PublishScheduledPostJob::dispatch((int) $review->post->id)->afterResponse();
+        }
+
+        $message = $publishImmediately
+            ? __('The post was approved. Publishing continues in the background—check the calendar for status.')
+            : __('The publishing item has been approved and returned to the queue.');
+
+        $this->dispatch('app-toast', type: 'success', title: __('Post approved'), message: $message);
         $this->resetPage();
     }
 

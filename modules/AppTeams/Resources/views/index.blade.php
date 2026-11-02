@@ -714,8 +714,14 @@
                                             <x-ui.textarea wire:model="reviewNotes.{{ $review->id }}" name="review_note_{{ $review->id }}" :label="__('Decision note')" :error="$errors->first('reviewNotes.'.$review->id)" rows="2">{{ $reviewNotes[$review->id] ?? '' }}</x-ui.textarea>
                                         </div>
                                         <div class="mt-3 flex items-center gap-2">
-                                            <x-ui.button type="button" size="sm" wire:click="approveReview({{ $review->id }})">{{ __('Approve') }}</x-ui.button>
-                                            <x-ui.button type="button" size="sm" variant="danger" wire:click="rejectReview({{ $review->id }})">{{ __('Reject') }}</x-ui.button>
+                                            <x-ui.button type="button" size="sm" wire:click="approveReview({{ $review->id }})" wire:loading.attr="disabled" wire:target="approveReview">
+                                                <span wire:loading.remove wire:target="approveReview">{{ __('Approve') }}</span>
+                                                <span wire:loading wire:target="approveReview">{{ __('Approving…') }}</span>
+                                            </x-ui.button>
+                                            <x-ui.button type="button" size="sm" variant="danger" wire:click="rejectReview({{ $review->id }})" wire:loading.attr="disabled" wire:target="rejectReview">
+                                                <span wire:loading.remove wire:target="rejectReview">{{ __('Reject') }}</span>
+                                                <span wire:loading wire:target="rejectReview">{{ __('Rejecting…') }}</span>
+                                            </x-ui.button>
                                         </div>
                                     @endif
                                 </div>
