@@ -247,7 +247,29 @@ class PublishingApprovals extends Component
 
     protected function currentTeam(): ?Team
     {
-        return TeamWorkspaceAccess::resolveTeam(auth()->user(), persistSession: true);
+        $user = auth()->user();
+
+        if (! $user) {
+            return null;
+        }
+
+        TeamWorkspaceAccess::ensurePublishingTeamSession($user);
+
+        $team = TeamWorkspaceAccess::activeTeam($user);
+
+        if ($team && $this->canCurrentUserApprovePosts($team)) {
+            return $team;
+        }
+
+        $approverTeam = TeamWorkspaceAccess::firstTeamWhereUserCanApprovePosts($user);
+
+        if ($approverTeam) {
+            session(['portal_team_id' => (int) $approverTeam->id]);
+
+            return $approverTeam;
+        }
+
+        return TeamWorkspaceAccess::resolveTeam($user, persistSession: true);
     }
 
     protected function currentTeamId(): ?int
