@@ -578,7 +578,7 @@ class AppPublishingServiceProvider extends ServiceProvider
                 }
 
                 $user = auth()->user();
-                $team = TeamWorkspaceAccess::activeTeam($user);
+                $team = TeamWorkspaceAccess::resolveTeam($user);
 
                 if (! $team || ! $user) {
                     return false;

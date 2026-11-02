@@ -69,6 +69,45 @@ class TeamWorkspaceAccess
         return $memberTeamId ? (int) $memberTeamId : null;
     }
 
+    /**
+     * Team context for publishing and approvals when portal_team_id is unset.
+     * Optionally persists the resolved team to the session (same as visiting Teams / switch workspace).
+     */
+    public static function resolveTeam(?User $user, bool $persistSession = false): ?Team
+    {
+        if (! $user) {
+            return null;
+        }
+
+        $team = self::activeTeam($user);
+
+        if ($team) {
+            return $team;
+        }
+
+        $teamId = self::currentTeamId($user);
+
+        if (! $teamId) {
+            return null;
+        }
+
+        $team = Team::query()
+            ->with('owner')
+            ->whereKey($teamId)
+            ->where(function ($query) use ($user) {
+                $query->where('owner_user_id', $user->id)
+                    ->orWhereHas('members', fn ($memberQuery) => $memberQuery->where('users.id', $user->id));
+            })
+            ->first();
+
+        if ($team && $persistSession) {
+            session(['portal_team_id' => (int) $team->id]);
+            self::$activeTeamCache[(int) $user->id.':'.(int) $team->id] = $team;
+        }
+
+        return $team;
+    }
+
     public static function bumpPublishingCalendarCache(?User $user): void
     {
         if (! $user) {
