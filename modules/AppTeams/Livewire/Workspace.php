@@ -501,18 +501,14 @@ class Workspace extends Component
 
         $requestedStatus = (int) ($review->metadata['requested_status'] ?? PublishingPost::STATUS_SCHEDULED);
 
+        $publishImmediately = $review->post
+            && $requestedStatus === PublishingPost::STATUS_SCHEDULED
+            && (string) ($review->metadata['schedule_mode'] ?? '') === 'immediately';
+
         $review->post?->update([
             'status' => $requestedStatus,
             'changed' => now()->timestamp,
         ]);
-
-        if (
-            $review->post
-            && $requestedStatus === PublishingPost::STATUS_SCHEDULED
-            && (string) ($review->metadata['schedule_mode'] ?? '') === 'immediately'
-        ) {
-            PublishScheduledPostJob::dispatchSync((int) $review->post->id);
-        }
 
         $review->update([
             'status' => 'approved',
@@ -522,7 +518,16 @@ class Workspace extends Component
         ]);
 
         unset($this->reviewNotes[$reviewId]);
-        $this->notifySuccess(__('Approval item approved successfully.'));
+
+        if ($publishImmediately) {
+            PublishScheduledPostJob::dispatch((int) $review->post->id)->afterResponse();
+        }
+
+        $message = $publishImmediately
+            ? __('The post was approved. Publishing continues in the background—check the calendar for status.')
+            : __('Approval item approved successfully.');
+
+        $this->notifySuccess($message);
     }
 
     public function rejectReview(int $reviewId): void
