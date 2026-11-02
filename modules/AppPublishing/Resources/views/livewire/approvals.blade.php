@@ -220,9 +220,9 @@
                                     {{ __('Open in composer') }}
                                 </x-ui.button>
                                 <div class="grid grid-cols-2 gap-2">
-                                    <x-ui.button type="button" variant="primary" size="md" class="flex w-full justify-center [&_i]:!text-current" wire:click="approveReview({{ $review['review_id'] }})" wire:loading.attr="disabled" wire:target="approveReview">
-                                        <span wire:loading.remove wire:target="approveReview"><i class="fa-solid fa-certificate"></i> {{ __('Approve') }}</span>
-                                        <span wire:loading wire:target="approveReview"><i class="fa-solid fa-spinner fa-spin"></i> {{ __('Approving…') }}</span>
+                                    <x-ui.button type="button" variant="primary" size="md" class="flex w-full justify-center [&_i]:!text-current" wire:click="approveReview({{ $review['review_id'] }})" wire:loading.attr="disabled" wire:target="approveReview({{ $review['review_id'] }})">
+                                        <span wire:loading.remove wire:target="approveReview({{ $review['review_id'] }})"><i class="fa-solid fa-certificate"></i> {{ __('Approve') }}</span>
+                                        <span wire:loading wire:target="approveReview({{ $review['review_id'] }})"><i class="fa-solid fa-spinner fa-spin"></i> {{ __('Approving…') }}</span>
                                     </x-ui.button>
                                     <button
                                         type="button"
@@ -230,10 +230,10 @@
                                         style="border-color: rgba(239, 68, 68, 0.24); background-color: rgba(239, 68, 68, 0.08); color: #dc2626;"
                                         wire:click="rejectReview({{ $review['review_id'] }})"
                                         wire:loading.attr="disabled"
-                                        wire:target="rejectReview"
+                                        wire:target="rejectReview({{ $review['review_id'] }})"
                                     >
-                                        <span wire:loading.remove wire:target="rejectReview"><i class="fa-solid fa-ban" style="color: currentColor;"></i> {{ __('Reject') }}</span>
-                                        <span wire:loading wire:target="rejectReview"><i class="fa-solid fa-spinner fa-spin"></i> {{ __('Rejecting…') }}</span>
+                                        <span wire:loading.remove wire:target="rejectReview({{ $review['review_id'] }})"><i class="fa-solid fa-ban" style="color: currentColor;"></i> {{ __('Reject') }}</span>
+                                        <span wire:loading wire:target="rejectReview({{ $review['review_id'] }})"><i class="fa-solid fa-spinner fa-spin"></i> {{ __('Rejecting…') }}</span>
                                     </button>
                                 </div>
                             </div>
