@@ -22,7 +22,7 @@
         ];
 
         $controlLinks = [
-            ['title' => __('Roles'), 'description' => __('Permission groups and access mapping'), 'href' => route('admin-user-roles.index'), 'icon' => 'fa-solid fa-shield-keyhole'],
+            ['title' => __('Roles'), 'description' => __('Permission groups and access mapping'), 'href' => route('admin-user-roles.index'), 'icon' => 'fa-solid fa-user-shield'],
             ['title' => __('Teams'), 'description' => __('Ownership structure and member allocation'), 'href' => route('admin-user-teams.index'), 'icon' => 'fa-solid fa-people-group'],
             ['title' => __('Reports'), 'description' => __('Growth, verification, and distribution signals'), 'href' => route('admin-user-report.index'), 'icon' => 'fa-solid fa-chart-line'],
             ['title' => __('Audit logs'), 'description' => __('Identity and admin actions'), 'href' => route('admin-user-logs.index'), 'icon' => 'fa-solid fa-clipboard-list'],

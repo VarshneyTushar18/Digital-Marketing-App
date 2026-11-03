@@ -1166,7 +1166,7 @@
                                         x-on:click="open = !open"
                                         title="{{ __('Cloud import') }}"
                                     >
-                                        <i class="fa-solid fa-grid-2"></i>
+                                        <i class="fa-solid fa-border-all"></i>
                                     </button>
 
                                     <div
@@ -1229,7 +1229,7 @@
                             <x-ui.dropdown-menu align="right" width="auto" class="min-w-[14rem]">
                                 <x-slot:trigger>
                                     <x-ui.button type="button" variant="outline" size="sm">
-                                        <i class="fa-solid fa-grid-2"></i>
+                                        <i class="fa-solid fa-border-all"></i>
                                         {{ __('Import') }}
                                     </x-ui.button>
                                 </x-slot:trigger>

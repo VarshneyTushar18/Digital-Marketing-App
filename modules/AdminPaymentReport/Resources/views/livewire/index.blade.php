@@ -151,7 +151,7 @@
         <x-slot:actions>
             <x-ui.notice-card
                 variant="info"
-                icon="fa-solid fa-calendar-range"
+                icon="fa-solid fa-calendar-week"
                 :title="__('Reporting range')"
                 :description="$rangeLabel"
                 class="min-w-[18rem]"
@@ -189,9 +189,9 @@
 
     <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <x-ui.notice-card variant="info" icon="fa-solid fa-chart-line" :title="__('Average daily income')" :description="'$'.number_format($averageDailyIncome, 2)" />
-        <x-ui.notice-card variant="success" icon="fa-solid fa-trophy-star" :title="__('Peak day')" :description="($peakDay['label'] ?? __('N/A')).' · $'.number_format((float) ($peakDay['total'] ?? 0), 2)" />
+        <x-ui.notice-card variant="success" icon="fa-solid fa-trophy" :title="__('Peak day')" :description="($peakDay['label'] ?? __('N/A')).' · $'.number_format((float) ($peakDay['total'] ?? 0), 2)" />
         <x-ui.notice-card variant="warning" icon="fa-solid fa-clock" :title="__('Peak hour')" :description="($peakHour['label'] ?? __('N/A')).' · $'.number_format((float) ($peakHour['total'] ?? 0), 2)" />
-        <x-ui.notice-card variant="success" icon="fa-solid fa-calendar-star" :title="__('Best weekday')" :description="($bestWeekday['label'] ?? __('N/A')).' · $'.number_format((float) ($bestWeekday['total'] ?? 0), 2)" />
+        <x-ui.notice-card variant="success" icon="fa-solid fa-calendar-day" :title="__('Best weekday')" :description="($bestWeekday['label'] ?? __('N/A')).' · $'.number_format((float) ($bestWeekday['total'] ?? 0), 2)" />
     </div>
 
     <div class="grid gap-5 xl:grid-cols-2">

@@ -15,7 +15,7 @@
         :title="__('User Roles')"
         :description="__('Reusable permission groups for backend users, with clearer visibility into assignments and access coverage.')"
         :count="$roleCount"
-        icon="fa-solid fa-shield-keyhole"
+        icon="fa-solid fa-user-shield"
     >
         <x-slot:actions>
             <x-ui.button href="{{ route('admin-user-roles.create') }}" wire:navigate>{{ __('Create role') }}</x-ui.button>
