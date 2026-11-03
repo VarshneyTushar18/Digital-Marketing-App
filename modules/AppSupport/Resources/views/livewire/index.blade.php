@@ -11,7 +11,7 @@
                 'value' => number_format($summary['total']),
                 'description' => __('All support tickets created from your account.'),
                 'progress' => $summary['total'] > 0 ? 100 : 0,
-                'icon' => 'fa-solid fa-folders',
+                'icon' => 'fa-solid fa-inbox',
                 'tone' => 'rgba(59, 130, 246, 0.10)',
                 'color' => 'rgb(37, 99, 235)',
             ],
@@ -21,8 +21,8 @@
                 'description' => __('Tickets waiting for action or a final answer.'),
                 'progress' => $summary['total'] > 0 ? (int) round(($summary['open'] / $supportTotal) * 100) : 0,
                 'icon' => 'fa-solid fa-door-open',
-                'tone' => 'rgba(99, 102, 241, 0.10)',
-                'color' => 'rgb(79, 70, 229)',
+                'tone' => 'rgba(99, 102, 241, 0.16)',
+                'color' => 'rgb(129, 140, 248)',
             ],
             [
                 'label' => __('Resolved'),
@@ -100,7 +100,7 @@
                         <p class="mt-1 text-sm" style="color: var(--theme-muted-text-color);">{{ __('Conversation history and ticket status in one place.') }}</p>
                     </div>
                     <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style="background: rgba(var(--theme-accent-rgb), 0.10); color: var(--theme-accent-color);">
-                        <i class="fa-solid fa-comments-question-check text-lg"></i>
+                        <i class="fa-solid fa-comments text-lg"></i>
                     </span>
                 </div>
 

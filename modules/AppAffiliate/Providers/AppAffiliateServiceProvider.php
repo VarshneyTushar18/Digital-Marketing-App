@@ -38,7 +38,7 @@ class AppAffiliateServiceProvider extends ServiceProvider
             'label' => 'Affiliate',
             'route_name' => 'portal.affiliate.index',
             'active_when' => ['portal.affiliate.*'],
-            'icon' => 'fa-solid fa-hand-holding-dollar',
+            'icon' => 'fa-solid fa-coins',
             'order' => 40,
             'visible' => fn () => app(AffiliateService::class)->userCanAccess(auth()->user()),
         ]);

@@ -1,6 +1,6 @@
 @php
     $metricCards = [
-        ['label' => __('Total'), 'value' => number_format($summary['total']), 'description' => __('All commission records.'), 'icon' => 'fa-solid fa-badge-dollar', 'tone' => 'var(--theme-accent)', 'progress' => $summary['total'] > 0 ? 100 : 0],
+        ['label' => __('Total'), 'value' => number_format($summary['total']), 'description' => __('All commission records.'), 'icon' => 'fa-solid fa-coins', 'tone' => 'var(--theme-accent)', 'progress' => $summary['total'] > 0 ? 100 : 0],
         ['label' => __('Pending'), 'value' => number_format($summary['pending']), 'description' => __('Waiting for admin review.'), 'icon' => 'fa-solid fa-hourglass-half', 'tone' => 'rgb(217 119 6)', 'progress' => $summary['pending'] > 0 ? 100 : 0],
         ['label' => __('Approved Value'), 'value' => number_format($summary['approved'], 2), 'description' => __('Commission value already approved.'), 'icon' => 'fa-solid fa-circle-check', 'tone' => 'rgb(5 150 105)', 'progress' => $summary['approved'] > 0 ? 100 : 0],
     ];
@@ -18,7 +18,7 @@
         :title="__('Affiliate Commissions')"
         :description="__('Approve or reject commissions generated from referred user payments.')"
         :count="$summary['total']"
-        icon="fa-solid fa-badge-dollar"
+        icon="fa-solid fa-coins"
     />
 
     @if ($statusMessage)
@@ -84,7 +84,7 @@
                 @empty
                     <x-ui.table-row>
                         <x-ui.table-cell colspan="6" class="py-10">
-                            <x-ui.empty icon="fa-solid fa-badge-dollar" :title="__('No commission records found.')" :description="__('Eligible referred payments will create commission entries here.')" />
+                            <x-ui.empty icon="fa-solid fa-coins" :title="__('No commission records found.')" :description="__('Eligible referred payments will create commission entries here.')" />
                         </x-ui.table-cell>
                     </x-ui.table-row>
                 @endforelse

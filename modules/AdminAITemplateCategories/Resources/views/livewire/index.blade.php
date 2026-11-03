@@ -35,22 +35,45 @@
         :title="__('AI Template Categories')"
         :description="__('Organize reusable AI prompts into clear category groups for faster authoring and governance.')"
         :count="$summary['total']"
-        icon="fa-solid fa-folders"
+        icon="fa-solid fa-table-cells-large"
     >
         <x-slot:actions>
             <x-ui.button type="button" wire:click="openCreateModal">{{ __('Create category') }}</x-ui.button>
         </x-slot:actions>
     </x-ui.page-hero>
 
-    <x-ui.metric-strip
-        :items="[
-            ['label' => __('Total'), 'value' => number_format($summary['total']), 'description' => __('All configured category groups for AI templates.'), 'progress' => 100, 'tone' => 'var(--theme-accent)'],
-            ['label' => __('Enabled'), 'value' => number_format($summary['enabled']), 'description' => __('Categories currently available to template authors.'), 'progress' => $summary['total'] > 0 ? (int) round(($summary['enabled'] / $summary['total']) * 100) : 0, 'tone' => 'var(--theme-success-color)'],
-            ['label' => __('Disabled'), 'value' => number_format($summary['disabled']), 'description' => __('Categories hidden from the active template workflow.'), 'progress' => $summary['total'] > 0 ? (int) round(($summary['disabled'] / $summary['total']) * 100) : 0, 'tone' => 'var(--theme-muted-text-color)'],
-        ]"
-        :show-icons="false"
-        columns="md:grid-cols-3"
-    />
+    @php
+        $enabledPercent = max(8, $summary['total'] > 0 ? (int) round(($summary['enabled'] / $summary['total']) * 100) : 8);
+        $disabledPercent = max(8, $summary['total'] > 0 ? (int) round(($summary['disabled'] / $summary['total']) * 100) : 8);
+        $categoryStatCards = [
+            [
+                'label' => __('Total'),
+                'value' => number_format($summary['total']),
+                'description' => __('All configured category groups for AI templates.'),
+                'icon' => 'fa-folder-tree',
+                'tone' => 'var(--theme-accent)',
+                'progress' => 100,
+            ],
+            [
+                'label' => __('Enabled'),
+                'value' => number_format($summary['enabled']),
+                'description' => __('Categories currently available to template authors.'),
+                'icon' => 'fa-circle-check',
+                'tone' => 'var(--theme-success-color)',
+                'progress' => $enabledPercent,
+            ],
+            [
+                'label' => __('Disabled'),
+                'value' => number_format($summary['disabled']),
+                'description' => __('Categories hidden from the active template workflow.'),
+                'icon' => 'fa-eye-slash',
+                'tone' => 'var(--theme-muted-text-color)',
+                'progress' => $disabledPercent,
+            ],
+        ];
+    @endphp
+
+    <x-ui.metric-strip :items="$categoryStatCards" columns="md:grid-cols-3" />
 
     <x-ui.filter-panel fields-class="md:grid-cols-[minmax(0,1fr)_220px_auto]">
         <x-slot:fields>
@@ -123,7 +146,7 @@
             </x-ui.surface-card>
         @empty
             <div class="md:col-span-2 xl:col-span-3">
-                <x-ui.empty icon="fa-solid fa-folders" :title="__('No AI template categories found.')" :description="__('Try broadening your filters or create a new category to start grouping templates.')" />
+                <x-ui.empty icon="fa-solid fa-folder-tree" :title="__('No AI template categories found.')" :description="__('Try broadening your filters or create a new category to start grouping templates.')" />
             </div>
         @endforelse
     </div>

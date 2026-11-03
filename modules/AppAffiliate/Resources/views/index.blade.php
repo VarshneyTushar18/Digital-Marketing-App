@@ -19,7 +19,7 @@
             <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center">
                 <div class="space-y-4">
                     <span class="inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em]" style="border-color: rgba(var(--theme-border-color-rgb), 0.58); background: rgba(var(--theme-surface-overlay-rgb), 0.82); color: var(--theme-accent);">
-                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                        <i class="fa-solid fa-sack-dollar"></i>
                         {{ __('Affiliate program') }}
                     </span>
                     <div class="space-y-3">
@@ -75,7 +75,7 @@
             <x-ui.card class="flex h-full flex-col space-y-5">
                 <div class="flex items-start gap-3">
                     <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl" style="background: rgba(var(--theme-accent-rgb), 0.10); color: var(--theme-accent-color);">
-                        <i class="fa-solid fa-link-simple"></i>
+                        <i class="fa-solid fa-link"></i>
                     </span>
                     <div>
                         <h3 class="text-lg font-semibold" style="color: var(--theme-header-text-color);">{{ __('Referral assets') }}</h3>
@@ -127,7 +127,7 @@
             <x-ui.datatable-shell class="h-full" :title="__('Recent commissions')" :info="__('Your latest affiliate commission records.')">
                 <x-slot:toolbar>
                     <span class="inline-flex h-9 w-9 items-center justify-center rounded-2xl" style="background: rgba(16, 185, 129, 0.10); color: rgb(5, 150, 105);">
-                        <i class="fa-solid fa-badge-dollar"></i>
+                        <i class="fa-solid fa-sack-dollar"></i>
                     </span>
                 </x-slot:toolbar>
                 <x-ui.table class="rounded-none border-0 shadow-none">
@@ -148,7 +148,7 @@
                         @empty
                             <x-ui.table-row>
                                 <x-ui.table-cell colspan="4" class="py-10">
-                                    <x-ui.empty icon="fa-solid fa-badge-dollar" :title="__('No commissions yet.')" :description="__('Once referred users complete eligible payments, the records will show here.')" />
+                                    <x-ui.empty icon="fa-solid fa-sack-dollar" :title="__('No commissions yet.')" :description="__('Once referred users complete eligible payments, the records will show here.')" />
                                 </x-ui.table-cell>
                             </x-ui.table-row>
                         @endforelse

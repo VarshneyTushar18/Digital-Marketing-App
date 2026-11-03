@@ -2,7 +2,7 @@
     <div class="space-y-4">
         <div class="flex items-center gap-2">
             <span class="flex h-8 w-8 items-center justify-center rounded-[0.7rem]" style="background: rgba(var(--theme-accent-rgb), 0.1); color: var(--theme-accent);">
-                <i class="fa-solid fa-sliders-simple text-sm"></i>
+                <i class="fa-solid fa-sliders text-sm"></i>
             </span>
             <p class="text-sm font-semibold" style="color: var(--theme-header-text-color);">{{ __('Current setup') }}</p>
         </div>

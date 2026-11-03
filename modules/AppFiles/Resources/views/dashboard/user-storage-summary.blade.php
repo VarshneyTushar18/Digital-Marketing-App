@@ -72,7 +72,7 @@
                         <div class="min-w-0">
                             <div class="flex flex-wrap items-center gap-2">
                                 <span class="inline-flex items-center rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em]" style="border-color: rgba(var(--theme-accent-rgb),0.16); background: rgba(var(--theme-accent-rgb),0.08); color: var(--theme-accent);">
-                                    <i class="fa-solid fa-folders mr-1.5 text-[10px]"></i>{{ __('Storage and asset health') }}
+                                    <i class="fa-solid fa-folder-tree mr-1.5 text-[10px]"></i>{{ __('Storage and asset health') }}
                                 </span>
                                 <span class="inline-flex items-center rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em]" style="background: rgba(var(--theme-success-color-rgb),0.1); color: var(--theme-success-color);">
                                     {{ __('Library snapshot') }}

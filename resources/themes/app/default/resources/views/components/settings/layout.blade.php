@@ -50,7 +50,7 @@
                     <div class="flex items-center justify-between gap-3">
                         <p class="text-[11px] font-semibold uppercase tracking-[0.2em]" style="color: var(--theme-muted-text-color);">{{ __('Workspace') }}</p>
                         <span class="inline-flex h-7 w-7 items-center justify-center rounded-full" style="background-color: rgba(var(--theme-accent-rgb), 0.12); color: var(--theme-accent);">
-                            <i class="fa-solid fa-grid-2 text-[12px]"></i>
+                            <i class="fa-solid fa-table-cells-large text-[12px]"></i>
                         </span>
                     </div>
                     <p class="mt-2 text-[15px] font-semibold leading-6" style="color: var(--theme-header-text-color);">{{ __('Shared admin control surface') }}</p>

@@ -3,7 +3,7 @@
         :eyebrow="__('AI Studio')"
         :title="__('Calendar Planner')"
         :description="__('Build a structured posting plan from one campaign brief, with dated ideas ready for your publishing calendar.')"
-        icon="fa-solid fa-calendar-range"
+        icon="fa-solid fa-calendar-week"
         :panel-label="__('Planning workspace')"
         :panel-title="__('Dated content plan')"
         :panel-description="__('Turn a brief into a usable publishing calendar.')"
@@ -153,7 +153,7 @@
 
                 <div class="mt-5 flex flex-wrap items-center gap-3">
                     <x-ui.button type="button" wire:click="plan" wire:loading.attr="disabled" wire:target="plan" :disabled="!($creditPreview['enough'] ?? true)">
-                        <i class="fa-solid fa-calendar-range"></i>
+                        <i class="fa-solid fa-calendar-week"></i>
                         <span wire:loading.remove wire:target="plan">{{ __('Plan calendar') }}</span>
                         <span wire:loading wire:target="plan">{{ __('Planning...') }}</span>
                     </x-ui.button>
