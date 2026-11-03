@@ -194,6 +194,47 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
         return $this->isSuperAdmin() || filled($this->role_id);
     }
 
+    public function needsAdminReview(): bool
+    {
+        if (blank($this->email) || blank($this->plan_id)) {
+            return true;
+        }
+
+        if ($this->isSuperAdmin()) {
+            return false;
+        }
+
+        return blank($this->role_id);
+    }
+
+    public function scopeAdminUserReady($query)
+    {
+        return $query
+            ->whereNotNull('email')
+            ->whereNotNull('plan_id')
+            ->where(function ($builder): void {
+                $builder
+                    ->whereNotNull('role_id')
+                    ->orWhere('is_super_admin', true)
+                    ->orWhere('username', 'admin');
+            });
+    }
+
+    public function scopeAdminUserNeedsReview($query)
+    {
+        return $query->where(function ($builder): void {
+            $builder
+                ->whereNull('email')
+                ->orWhereNull('plan_id')
+                ->orWhere(function ($accessBuilder): void {
+                    $accessBuilder
+                        ->whereNull('role_id')
+                        ->where('is_super_admin', false)
+                        ->where('username', '!=', 'admin');
+                });
+        });
+    }
+
     public function canAccessAdminRoute(?string $routeName): bool
     {
         if (! $this->canAccessAdmin()) {
