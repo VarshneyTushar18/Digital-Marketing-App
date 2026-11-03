@@ -1,8 +1,5 @@
 @php
-    $publishingApprovalTeam = \Modules\AppTeams\Support\TeamWorkspaceAccess::activeTeam(auth()->user());
-    $publishingCanApprovePosts = auth()->user()
-        && $publishingApprovalTeam
-        && \Modules\AppTeams\Support\TeamWorkspaceAccess::hasPermission(auth()->user(), 'post.approve', $publishingApprovalTeam);
+    $publishingCanApprovePosts = \Modules\AppTeams\Support\TeamWorkspaceAccess::canShowPublishingApprovalsNav(auth()->user());
 @endphp
 
 <div class="mx-auto flex w-full max-w-[1680px] flex-col gap-6 px-4 py-4 sm:px-5 xl:px-6">

@@ -128,7 +128,7 @@ class PublishingApprovals extends Component
         abort_unless($this->publishingEnabled(), 404);
 
         $team = $this->currentTeam();
-        abort_unless($this->canCurrentUserApprovePosts($team), 403);
+        abort_unless($team && $this->canCurrentUserApprovePosts($team), 403);
 
         $channels = $this->publishableAccountsQuery()
             ->where('created_by_user_id', $this->workspaceOwnerUserId())
@@ -247,12 +247,35 @@ class PublishingApprovals extends Component
 
     protected function currentTeam(): ?Team
     {
-        return TeamWorkspaceAccess::activeTeam(auth()->user());
+        $user = auth()->user();
+
+        if (! $user) {
+            return null;
+        }
+
+        TeamWorkspaceAccess::ensurePublishingTeamSession($user);
+
+        $team = TeamWorkspaceAccess::activeTeam($user);
+
+        if ($team && $this->canCurrentUserApprovePosts($team)) {
+            return $team;
+        }
+
+        $approverTeam = TeamWorkspaceAccess::firstTeamWhereUserCanApprovePosts($user);
+
+        if ($approverTeam) {
+            session(['portal_team_id' => (int) $approverTeam->id]);
+
+            return $approverTeam;
+        }
+
+        return TeamWorkspaceAccess::resolveTeam($user, persistSession: true);
     }
 
     protected function currentTeamId(): ?int
     {
-        return $this->currentTeam()?->id;
+        return TeamWorkspaceAccess::currentTeamId(auth()->user())
+            ?? $this->currentTeam()?->id;
     }
 
     protected function canCurrentUserApprovePosts(?Team $team): bool
@@ -307,6 +330,9 @@ class PublishingApprovals extends Component
 
     protected function publishingEnabled(): bool
     {
-        return TeamWorkspaceAccess::teamHasModule(TeamWorkspaceAccess::activeTeam(auth()->user()), 'publishing');
+        return TeamWorkspaceAccess::teamHasModule(
+            TeamWorkspaceAccess::resolveTeam(auth()->user()),
+            'publishing'
+        );
     }
 }

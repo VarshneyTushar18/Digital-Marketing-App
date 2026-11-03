@@ -2,6 +2,7 @@
 
 namespace Modules\AppTeams\Support;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Modules\AdminUser\Models\Team;
 use Modules\AdminUser\Models\User;
@@ -67,6 +68,104 @@ class TeamWorkspaceAccess
         $memberTeamId = $user->teams()->value('teams.id');
 
         return $memberTeamId ? (int) $memberTeamId : null;
+    }
+
+    /**
+     * Team context for publishing and approvals when portal_team_id is unset.
+     * Optionally persists the resolved team to the session (same as visiting Teams / switch workspace).
+     */
+    public static function resolveTeam(?User $user, bool $persistSession = false): ?Team
+    {
+        if (! $user) {
+            return null;
+        }
+
+        $team = self::activeTeam($user);
+
+        if ($team) {
+            return $team;
+        }
+
+        $teamId = self::currentTeamId($user);
+
+        if (! $teamId) {
+            return null;
+        }
+
+        $team = Team::query()
+            ->with('owner')
+            ->whereKey($teamId)
+            ->where(function ($query) use ($user) {
+                $query->where('owner_user_id', $user->id)
+                    ->orWhereHas('members', fn ($memberQuery) => $memberQuery->where('users.id', $user->id));
+            })
+            ->first();
+
+        if ($team && $persistSession) {
+            session(['portal_team_id' => (int) $team->id]);
+            self::$activeTeamCache[(int) $user->id.':'.(int) $team->id] = $team;
+        }
+
+        return $team;
+    }
+
+    /**
+     * @return Collection<int, Team>
+     */
+    public static function accessibleTeamsForUser(?User $user): Collection
+    {
+        if (! $user) {
+            return collect();
+        }
+
+        return Team::query()
+            ->with('owner')
+            ->where(function ($query) use ($user) {
+                $query->where('owner_user_id', $user->id)
+                    ->orWhereHas('members', fn ($memberQuery) => $memberQuery->where('users.id', $user->id));
+            })
+            ->orderByRaw('CASE WHEN owner_user_id = ? THEN 0 ELSE 1 END', [$user->id])
+            ->orderBy('name')
+            ->get()
+            ->unique('id')
+            ->values();
+    }
+
+    public static function firstTeamWhereUserCanApprovePosts(?User $user): ?Team
+    {
+        if (! $user) {
+            return null;
+        }
+
+        foreach (self::accessibleTeamsForUser($user) as $team) {
+            if (! self::teamHasModule($team, 'publishing')) {
+                continue;
+            }
+
+            if (self::hasPermission($user, 'post.approve', $team)) {
+                return $team;
+            }
+        }
+
+        return null;
+    }
+
+    public static function canShowPublishingApprovalsNav(?User $user): bool
+    {
+        return self::firstTeamWhereUserCanApprovePosts($user) !== null;
+    }
+
+    public static function ensurePublishingTeamSession(?User $user): void
+    {
+        if (! $user) {
+            return;
+        }
+
+        if ((int) session('portal_team_id', 0) > 0 && self::activeTeam($user)) {
+            return;
+        }
+
+        self::resolveTeam($user, persistSession: true);
     }
 
     public static function bumpPublishingCalendarCache(?User $user): void

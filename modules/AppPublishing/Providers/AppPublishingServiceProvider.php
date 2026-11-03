@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Modules\AdminCrons\Support\SystemCronRegistry;
 use Modules\AppAiPublishing\Models\AiPublishingRun;
 use Modules\AppPublishing\Console\Commands\DispatchDuePostsCommand;
+use Modules\AppPublishing\Http\Middleware\EnsurePortalPublishingTeamContext;
 use Modules\AppPublishing\Models\PublishingCampaign;
 use Modules\AppPublishing\Models\PublishingLabel;
 use Modules\AppPublishing\Models\PublishingPost;
@@ -45,6 +46,8 @@ class AppPublishingServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        Route::aliasMiddleware('portal.publishing.team', EnsurePortalPublishingTeamContext::class);
+
         $this->loadRoutesFrom(__DIR__.'/../Routes/web.php');
         $this->loadViewsFrom(__DIR__.'/../Resources/views', 'apppublishing');
 
@@ -511,7 +514,7 @@ class AppPublishingServiceProvider extends ServiceProvider
 
         $publishingHeaderVisible = function (): bool {
             $user = auth()->user();
-            $team = TeamWorkspaceAccess::activeTeam($user);
+            $team = TeamWorkspaceAccess::resolveTeam($user);
             $planOwner = $team?->owner ?: $user;
 
             if (! request()->routeIs('portal.publishing.*', 'portal.ai-publishing*', 'portal.bulk-posts*', 'portal.rss-schedules.*')) {
@@ -577,24 +580,9 @@ class AppPublishingServiceProvider extends ServiceProvider
                     return false;
                 }
 
-                $user = auth()->user();
-                $team = TeamWorkspaceAccess::activeTeam($user);
+                TeamWorkspaceAccess::ensurePublishingTeamSession(auth()->user());
 
-                if (! $team || ! $user) {
-                    return false;
-                }
-
-                if ((int) $team->owner_user_id === (int) $user->id) {
-                    return true;
-                }
-
-                $member = $team->members()->where('users.id', $user->id)->first();
-
-                if (! $member) {
-                    return false;
-                }
-
-                return TeamWorkspaceAccess::hasPermission($user, 'post.approve', $team);
+                return TeamWorkspaceAccess::canShowPublishingApprovalsNav(auth()->user());
             },
         ], 'user');
 

@@ -8,7 +8,7 @@ use Modules\AppPublishing\Livewire\PublishingDrafts;
 use Modules\AppPublishing\Livewire\PublishingLabels;
 use Modules\AppPublishing\Livewire\PublishingQueue;
 
-Route::middleware(['web', 'auth', 'verified'])->group(function (): void {
+Route::middleware(['web', 'auth', 'verified', 'portal.publishing.team'])->group(function (): void {
     Route::livewire('portal/publishing', PublishingCalendar::class)
         ->name('portal.publishing.calendar');
     Route::livewire('portal/publishing/drafts', PublishingDrafts::class)

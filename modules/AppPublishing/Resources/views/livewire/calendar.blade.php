@@ -2,10 +2,7 @@
     $dayCount = $days->count();
     $composerCanShortenUrls = url_shortening_enabled(auth()->user());
     $providerCardsByKey = collect(channel_provider_cards())->keyBy('key');
-    $publishingApprovalTeam = \Modules\AppTeams\Support\TeamWorkspaceAccess::activeTeam(auth()->user());
-    $publishingCanApprovePosts = auth()->user()
-        && $publishingApprovalTeam
-        && \Modules\AppTeams\Support\TeamWorkspaceAccess::hasPermission(auth()->user(), 'post.approve', $publishingApprovalTeam);
+    $publishingCanApprovePosts = \Modules\AppTeams\Support\TeamWorkspaceAccess::canShowPublishingApprovalsNav(auth()->user());
 
     $statusMeta = [
         'pending' => ['label' => __('Pending'), 'surface' => 'rgba(59, 130, 246, 0.12)', 'text' => '#2563eb'],
