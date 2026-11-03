@@ -94,7 +94,7 @@
                         </div>
                         <p class="text-sm leading-6" style="color: var(--theme-muted-text-color);">{{ __('Google Picker needs an OAuth Client ID and a Browser API key. Native Docs, Sheets, and Slides are not imported yet.') }}</p>
 
-                        <div class="mt-2 space-y-4 rounded-[1rem] border p-4" style="border-color: rgba(var(--theme-border-color-rgb), 0.68); background-color: rgba(var(--theme-border-color-rgb), 0.03);">
+                        <div class="mt-2 min-w-0 space-y-4 rounded-[1rem] border p-4" style="border-color: rgba(var(--theme-border-color-rgb), 0.68); background-color: rgba(var(--theme-border-color-rgb), 0.03);">
                             <div>
                                 <p class="text-sm font-semibold" style="color: var(--theme-header-text-color);">{{ __('Published posts → Google Drive') }}</p>
                                 <p class="mt-1 text-sm" style="color: var(--theme-muted-text-color);">{{ __('Uploads images and videos after a successful publish, grouped by social account and publish date (YYYY-MM-DD).') }}</p>
@@ -117,7 +117,7 @@
                                 :value="$appfiles_publish_drive_oauth_client_secret"
                                 :error="$errors->first('appfiles_publish_drive_oauth_client_secret')"
                             />
-                            <div class="space-y-3 border-t pt-4" style="border-color: rgba(var(--theme-border-color-rgb), 0.68);">
+                            <div class="min-w-0 space-y-3 border-t pt-4" style="border-color: rgba(var(--theme-border-color-rgb), 0.68);">
                                 <p class="text-sm font-semibold" style="color: var(--theme-header-text-color);">{{ __('Backup Google account') }}</p>
                                 @if (session('success'))
                                     <p class="text-sm" style="color: var(--theme-success-color, #16a34a);">{{ session('success') }}</p>
@@ -128,7 +128,10 @@
                                 @if ($publishDriveOAuthConnected ?? false)
                                     <p class="text-sm" style="color: var(--theme-muted-text-color);">{{ __('Signed in as') }} <strong>{{ $publishDriveOAuthEmail }}</strong> · <a href="{{ route('appfiles.publish-drive.disconnect') }}" class="font-medium underline">{{ __('Disconnect') }}</a></p>
                                 @else
-                                    <p class="text-xs" style="color: var(--theme-muted-text-color);">{{ __('Redirect URI:') }} <code>{{ $publishDriveOAuthRedirectUri ?? '' }}</code></p>
+                                    <p class="min-w-0 text-xs" style="color: var(--theme-muted-text-color);">
+                                        <span class="block">{{ __('Redirect URI:') }}</span>
+                                        <code class="mt-1.5 block overflow-hidden break-all rounded-md border px-2.5 py-2 font-mono text-[11px] leading-5" style="border-color: rgba(var(--theme-border-color-rgb), 0.55); background-color: rgba(var(--theme-border-color-rgb), 0.06); color: var(--theme-header-text-color);">{{ $publishDriveOAuthRedirectUri ?? '' }}</code>
+                                    </p>
                                     <a href="{{ route('appfiles.publish-drive.connect') }}" class="inline-flex rounded-lg px-4 py-2 text-sm font-semibold text-white" style="background-color: var(--theme-accent-color, #0A66C2);">{{ __('Connect Google account') }}</a>
                                 @endif
                             </div>

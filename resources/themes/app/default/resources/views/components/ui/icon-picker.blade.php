@@ -58,7 +58,7 @@
         'fa-solid fa-stars',
         'fa-solid fa-certificate',
         'fa-solid fa-badge-percent',
-        'fa-solid fa-badge-dollar',
+        'fa-solid fa-coins',
         'fa-solid fa-fire',
         'fa-solid fa-sun',
         'fa-solid fa-moon',

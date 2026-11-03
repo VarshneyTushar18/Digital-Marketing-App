@@ -22,7 +22,7 @@ class AdminAffiliateServiceProvider extends ServiceProvider
             'label' => 'Affiliate',
             'route_name' => 'admin-affiliate.index',
             'active_when' => ['admin-affiliate.*', 'admin-affiliate-commissions.*', 'admin-affiliate-withdrawals.*'],
-            'icon' => 'fa-solid fa-hand-holding-dollar',
+            'icon' => 'fa-solid fa-coins',
             'order' => 35,
             'children' => [
                 [

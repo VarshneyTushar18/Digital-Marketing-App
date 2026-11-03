@@ -13,7 +13,7 @@
         :title="__('Affiliate')"
         :description="__('Monitor affiliates, referral performance, and balances.')"
         :count="$summary['affiliates']"
-        icon="fa-solid fa-hand-holding-dollar"
+        icon="fa-solid fa-coins"
     />
 
     <x-ui.metric-strip :items="$metricCards" :show-progress="false" columns="md:grid-cols-2 xl:grid-cols-4" />
@@ -57,7 +57,7 @@
                 @empty
                     <x-ui.table-row>
                         <x-ui.table-cell colspan="6" class="py-10">
-                            <x-ui.empty icon="fa-solid fa-hand-holding-dollar" :title="__('No affiliate profiles found.')" :description="__('Profiles appear after users register and affiliate tracking starts being used.')" />
+                            <x-ui.empty icon="fa-solid fa-coins" :title="__('No affiliate profiles found.')" :description="__('Profiles appear after users register and affiliate tracking starts being used.')" />
                         </x-ui.table-cell>
                     </x-ui.table-row>
                 @endforelse

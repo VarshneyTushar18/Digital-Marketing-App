@@ -402,7 +402,7 @@
                                                             @if (in_array('dark-mode', $supports, true))
                                                                 <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-700 dark:border-emerald-900/70 dark:bg-emerald-950/40 dark:text-emerald-300">{{ __('Dark mode') }}</span>
                                                             @endif
-                                                            <span class="inline-flex size-7 items-center justify-center rounded-full border border-slate-200/85 bg-white text-slate-500 shadow-sm dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300"><i class="fa-solid fa-window-frame-open"></i></span>
+                                                            <span class="inline-flex size-7 items-center justify-center rounded-full border border-slate-200/85 bg-white text-slate-500 shadow-sm dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300"><i class="fa-solid fa-window-maximize"></i></span>
                                                         </div>
                                                     </div>
                                                     @if ($previewImage)

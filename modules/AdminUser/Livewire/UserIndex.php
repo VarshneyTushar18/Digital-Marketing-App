@@ -168,23 +168,15 @@ class UserIndex extends Component
         }
 
         if ($filters['status'] === 'ready') {
-            $query
-                ->whereNotNull('email')
-                ->whereNotNull('role_id')
-                ->whereNotNull('plan_id');
+            $query->adminUserReady();
         } elseif ($filters['status'] === 'review') {
-            $query->where(function ($builder): void {
-                $builder
-                    ->whereNull('email')
-                    ->orWhereNull('role_id')
-                    ->orWhereNull('plan_id');
-            });
+            $query->adminUserNeedsReview();
         }
 
         $users = $query
             ->orderBy($sortColumn, $sortDirection)
             ->orderBy('id', 'desc')
-            ->paginate(15, ['id', 'name', 'username', 'email', 'locale', 'role_id', 'plan_id', 'plan_expires_at', 'created_at']);
+            ->paginate(15, ['id', 'name', 'username', 'email', 'locale', 'role_id', 'is_super_admin', 'plan_id', 'plan_expires_at', 'created_at']);
 
         return view('adminuser::livewire.index', [
             'users' => $users,

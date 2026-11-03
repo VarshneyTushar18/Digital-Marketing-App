@@ -3,7 +3,7 @@
         :eyebrow="__('AI Studio')"
         :title="__('AI Review')"
         :description="__('Paste a draft and get publish-readiness feedback, risks, and concrete fixes.')"
-        icon="fa-solid fa-shield-check"
+        icon="fa-solid fa-shield-halved"
         :panel-label="__('Quality pass')"
         :panel-title="__('Pre-publish review')"
         :panel-description="__('Check hooks, clarity, risk, CTA quality, and next edits.')"
@@ -51,7 +51,7 @@
 
             <div class="mt-5 flex flex-col gap-3 border-t pt-5 sm:flex-row sm:items-center sm:justify-between" style="border-color: rgba(var(--theme-border-color-rgb), 0.5);">
                 <x-ui.button type="button" wire:click="review" wire:loading.attr="disabled" wire:target="review" :disabled="!($creditPreview['enough'] ?? true)">
-                    <i class="fa-solid fa-shield-check"></i>
+                    <i class="fa-solid fa-shield-halved"></i>
                     <span wire:loading.remove wire:target="review">{{ __('Review draft') }}</span>
                     <span wire:loading wire:target="review">{{ __('Reviewing...') }}</span>
                 </x-ui.button>

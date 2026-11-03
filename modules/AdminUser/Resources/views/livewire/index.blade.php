@@ -7,7 +7,7 @@
         $verifiedUsers = $userCollection->filter(fn ($user) => filled($user->email))->count();
         $usersWithRoles = $userCollection->filter(fn ($user) => filled($user->role_id))->count();
         $usersWithPlans = $userCollection->filter(fn ($user) => filled($user->plan_id))->count();
-        $priorityUsers = $userCollection->filter(fn ($user) => blank($user->email) || blank($user->role_id) || blank($user->plan_id))->count();
+        $priorityUsers = $userCollection->filter(fn ($user) => $user->needsAdminReview())->count();
         $localeCoverage = $userCollection->pluck('locale')->filter()->unique()->count();
         $completionRate = $loadedUsers > 0 ? (int) round(($verifiedUsers / $loadedUsers) * 100) : 0;
         $roleCoverage = $loadedUsers > 0 ? (int) round(($usersWithRoles / $loadedUsers) * 100) : 0;
@@ -156,7 +156,7 @@
                 <div class="space-y-3 px-6 py-5 md:hidden">
                 @forelse ($users as $user)
                         @php
-                            $needsAttention = blank($user->email) || blank($user->role_id) || blank($user->plan_id);
+                            $needsAttention = $user->needsAdminReview();
                         @endphp
                     <x-ui.card padding="md" wire:key="user-mobile-{{ $user->id }}">
                             <div class="flex items-start gap-3">
@@ -289,7 +289,7 @@
                         <x-ui.table-body>
                             @forelse ($users as $user)
                                 @php
-                                    $needsAttention = blank($user->email) || blank($user->role_id) || blank($user->plan_id);
+                                    $needsAttention = $user->needsAdminReview();
                                 @endphp
                                 <x-ui.table-row wire:key="user-row-{{ $user->id }}">
                                     <x-ui.table-cell>

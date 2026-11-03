@@ -17,6 +17,11 @@
             $resolvedProgressTrackStyle = $item['progressTrackStyle'] ?? $progressTrackStyle;
             $iconSurface = $item['iconSurface'] ?? 'transparent';
             $iconBorder = $item['iconBorder'] ?? 'var(--theme-border-color)';
+            $iconRaw = trim((string) ($item['icon'] ?? ''));
+            $iconClass = $iconRaw;
+            if ($iconRaw !== '' && ! preg_match('/\bfa-(solid|regular|brands|light|thin|duotone)\b/', $iconRaw)) {
+                $iconClass = str_starts_with($iconRaw, 'fa-') ? 'fa-solid '.$iconRaw : 'fa-solid fa-'.$iconRaw;
+            }
         @endphp
 
         <div class="rounded-[1.35rem] border p-5" style="{{ $resolvedCardStyle }}">
@@ -37,7 +42,7 @@
 
                 @if ($showIcons && !empty($item['icon']))
                     <span class="inline-flex h-11 w-11 items-center justify-center rounded-full border text-sm" style="border-color: {{ $iconBorder }}; background: {{ $iconSurface }}; color: {{ $tone }};">
-                        <i class="{{ str_contains($item['icon'], 'fa-') ? $item['icon'] : 'fa-solid '.$item['icon'] }}"></i>
+                        <i class="{{ $iconClass }}"></i>
                     </span>
                 @endif
             </div>
