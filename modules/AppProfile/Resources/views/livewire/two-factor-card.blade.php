@@ -62,7 +62,7 @@
                                 linear-gradient(180deg, rgba(var(--theme-accent-rgb), 0.08) 0%, rgba(var(--theme-accent-rgb), 0.03) 100%);">
                                 <div class="relative flex h-full flex-col">
                                     <div class="inline-flex h-16 w-16 items-center justify-center rounded-[1.4rem] border shadow-[0_18px_40px_-26px_rgba(var(--theme-accent-rgb),0.4)]" style="border-color: rgba(var(--theme-accent-rgb), 0.16); background: rgba(255,255,255,0.6); color: var(--theme-accent);">
-                                        <i class="fa-solid fa-shield-check text-2xl"></i>
+                                        <i class="fa-solid fa-shield-halved text-2xl"></i>
                                     </div>
 
                                     <div class="mt-7 space-y-3">
@@ -209,12 +209,12 @@
                                                             <p class="mt-1 text-sm" style="color: var(--theme-muted-text-color);">{{ __('Use this if your authenticator app cannot scan QR codes.') }}</p>
                                                         </div>
                                                         <span class="inline-flex h-10 w-10 items-center justify-center rounded-full" style="background: rgba(var(--theme-accent-rgb), 0.1); color: var(--theme-accent);">
-                                                            <i class="fa-solid fa-key-skeleton"></i>
+                                                            <i class="fa-solid fa-key"></i>
                                                         </span>
                                                     </div>
 
                                                     <div
-                                                        class="mt-4 flex items-center gap-2"
+                                                        class="mt-4 flex min-w-0 items-center gap-2"
                                                         x-data="{
                                                             copied: false,
                                                             async copy() {
@@ -226,7 +226,7 @@
                                                             }
                                                         }"
                                                     >
-                                                        <div class="flex w-full items-stretch rounded-[1rem] border" style="border-color: var(--theme-border-color); background: var(--theme-surface-base);">
+                                                        <div class="flex min-w-0 w-full items-stretch rounded-[1rem] border" style="border-color: var(--theme-border-color); background: var(--theme-surface-base);">
                                                             @empty($manualSetupKey)
                                                                 <div class="flex w-full items-center justify-center p-3">
                                                                     <span class="text-sm" style="color: var(--theme-muted-text-color);">{{ __('Loading...') }}</span>
@@ -236,7 +236,7 @@
                                                                     type="text"
                                                                     readonly
                                                                     value="{{ $manualSetupKey }}"
-                                                                    class="w-full bg-transparent p-3 text-sm font-medium outline-none"
+                                                                    class="min-w-0 w-full break-all bg-transparent p-3 font-mono text-xs font-medium outline-none"
                                                                     style="color: var(--theme-header-text-color);"
                                                                 />
 
