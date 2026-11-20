@@ -359,6 +359,7 @@
 <link rel="stylesheet" href="{{ theme_shared_asset('plugins/fontawesome/css/solid.css') }}">
 <link rel="stylesheet" href="{{ theme_shared_asset('plugins/fontawesome/css/regular.css') }}">
 <link rel="stylesheet" href="{{ theme_shared_asset('plugins/fontawesome/css/brands.css') }}">
+<link rel="stylesheet" href="{{ theme_shared_asset('plugins/fontawesome/css/fontawesome-aliases.css') }}">
 <link rel="stylesheet" href="{{ theme_shared_asset('plugins/flags/flag-icon.css') }}">
 @livewireStyles
 <script src="{{ theme_shared_asset('plugins/highcharts/highcharts.js') }}"></script>

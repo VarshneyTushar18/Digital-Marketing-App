@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="{{ theme_shared_asset('plugins/fontawesome/css/solid.css') }}">
     <link rel="stylesheet" href="{{ theme_shared_asset('plugins/fontawesome/css/regular.css') }}">
     <link rel="stylesheet" href="{{ theme_shared_asset('plugins/fontawesome/css/brands.css') }}">
+    <link rel="stylesheet" href="{{ theme_shared_asset('plugins/fontawesome/css/fontawesome-aliases.css') }}">
     {!! theme_vite('guest/default') !!}
     {!! Script::globals() !!}
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js" defer></script>

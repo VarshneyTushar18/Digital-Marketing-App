@@ -54,7 +54,7 @@
                     <p class="mt-3 max-w-3xl text-sm leading-7" style="color: var(--theme-muted-text-color);">{{ __('Connect external tools with API keys, inbound publishing endpoints, and outbound post-status webhooks.') }}</p>
                 </div>
             </div>
-            <div class="min-w-0 max-w-full rounded-[1.25rem] border p-4 text-sm shadow-sm" style="border-color: rgba(var(--theme-border-color-rgb), 0.68); background-color: rgba(var(--theme-surface-base-rgb,255,255,255),0.96); color: var(--theme-header-text-color);">
+            <div class="min-w-0 max-w-full rounded-[1.25rem] border p-4 text-sm shadow-sm" style="border-color: rgba(var(--theme-border-color-rgb), 0.68); background-color: rgba(var(--theme-surface-overlay-rgb), 0.94); color: var(--theme-header-text-color);">
                 <div class="flex items-start justify-between gap-3">
                     <div>
                         <p class="text-[11px] font-semibold uppercase tracking-[0.22em]" style="color: var(--theme-muted-text-color);">{{ __('API workspace') }}</p>
@@ -64,7 +64,7 @@
                         <i class="fa-solid fa-code-branch"></i>
                     </div>
                 </div>
-                <div class="mt-4 rounded-[1rem] border px-4 py-3" style="border-color: rgba(var(--theme-border-color-rgb), 0.58); background-color: rgba(var(--theme-surface-muted-rgb,248,250,252),0.76);">
+                <div class="mt-4 rounded-[1rem] border px-4 py-3" style="border-color: rgba(var(--theme-border-color-rgb), 0.58); background-color: rgba(var(--theme-surface-subtle-rgb), 0.72);">
                     <div class="flex min-w-0 flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <div class="min-w-0">
                             <p class="font-semibold">{{ __('API Base') }}</p>

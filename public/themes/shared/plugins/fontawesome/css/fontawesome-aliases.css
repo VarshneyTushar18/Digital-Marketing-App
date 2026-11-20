@@ -1,0 +1,107 @@
+﻿/*! Font Awesome Free aliases for icon names used in the app that are not in the bundled Free 6.5.1 set. */
+
+.fa-calendar-clock::before { content: "\f073"; }
+.fa-grid-2-plus::before { content: "\f009"; }
+.fa-grid-2::before { content: "\f00a"; }
+.fa-grid::before { content: "\f58d"; }
+.fa-chart-simple-horizontal::before { content: "\e473"; }
+.fa-circle-small::before { content: "\f192"; }
+.fa-sparkles::before { content: "\e2ca"; }
+.fa-lock-keyhole::before { content: "\f023"; }
+.fa-shield-check::before { content: "\f3ed"; }
+.fa-megaphone::before { content: "\f0a1"; }
+.fa-comment-lines::before { content: "\f075"; }
+.fa-message-lines::before { content: "\f075"; }
+.fa-messages::before { content: "\f086"; }
+.fa-pen-line::before { content: "\f304"; }
+.fa-cpu::before { content: "\f2db"; }
+.fa-webhook::before { content: "\f1e6"; }
+.fa-signal-stream::before { content: "\f519"; }
+.fa-grip-dots::before { content: "\f58d"; }
+.fa-grip-dots-vertical::before { content: "\f58e"; }
+.fa-list-timeline::before { content: "\f03a"; }
+.fa-hourglass-clock::before { content: "\f252"; }
+.fa-buildings::before { content: "\f1ad"; }
+.fa-objects-column::before { content: "\f0db"; }
+.fa-chart-scatter::before { content: "\f201"; }
+.fa-badge-percent::before { content: "\25"; }
+.fa-chart-line-circle-dollar::before { content: "\f201"; }
+.fa-gauge-simple-max::before { content: "\f625"; }
+.fa-bell-on::before { content: "\f0f3"; }
+.fa-bell-ring::before { content: "\f0f3"; }
+.fa-bells::before { content: "\f0f3"; }
+.fa-books::before { content: "\f02d"; }
+.fa-envelopes::before { content: "\f0e0"; }
+.fa-files::before { content: "\f15b"; }
+.fa-filters::before { content: "\f0b0"; }
+.fa-folder-arrow-down::before { content: "\f019"; }
+.fa-folder-arrow-up::before { content: "\f093"; }
+.fa-image-polaroid::before { content: "\f03e"; }
+.fa-input-text::before { content: "\f246"; }
+.fa-layer-plus::before { content: "\f5fd"; }
+.fa-layer-minus::before { content: "\f5fd"; }
+.fa-link-simple::before { content: "\f0c1"; }
+.fa-list-tree::before { content: "\f0e8"; }
+.fa-music-note::before { content: "\f001"; }
+.fa-pen-paintbrush::before { content: "\f304"; }
+.fa-pen-sparkle::before { content: "\f304"; }
+.fa-salad::before { content: "\f06c"; }
+.fa-shield-keyhole::before { content: "\f3ed"; }
+.fa-signal-bars::before { content: "\f012"; }
+.fa-speaker::before { content: "\f028"; }
+.fa-spinner-third::before { content: "\f110"; }
+.fa-stars::before { content: "\f005"; }
+.fa-tablet-screen::before { content: "\f3fb"; }
+.fa-ticket-percent::before { content: "\f145"; }
+.fa-timer::before { content: "\f017"; }
+.fa-trash-can-list::before { content: "\f2ed"; }
+.fa-trophy-star::before { content: "\f091"; }
+.fa-video-plus::before { content: "\f03d"; }
+.fa-window::before { content: "\f2d0"; }
+.fa-alarm-clock::before { content: "\f017"; }
+.fa-calendar-circle-exclamation::before { content: "\f073"; }
+.fa-calendar-lines::before { content: "\f073"; }
+.fa-coffee-beans::before { content: "\f7b6"; }
+.fa-flag-pennant::before { content: "\f024"; }
+.fa-flower::before { content: "\f4d8"; }
+.fa-font-case::before { content: "\f031"; }
+.fa-bag-shopping-plus::before { content: "\f217"; }
+.fa-brackets-curly::before { content: "\f121"; }
+.fa-bookmark-slash::before { content: "\f02e"; }
+
+/* Directional arrows (Pro names → Free glyphs) */
+.fa-arrow-down-left::before { content: "\f063"; }
+.fa-arrow-down-right::before { content: "\f063"; }
+.fa-arrow-up-left::before { content: "\f062"; }
+.fa-arrow-up-right::before { content: "\f062"; }
+.fa-arrow-up-right-and-arrow-down-left-from-center::before { content: "\f424"; }
+
+/* Social brand glyphs when templates use fa-solid instead of fa-brands */
+.fa-solid.fa-facebook::before,
+.fa-solid.fa-instagram::before,
+.fa-solid.fa-linkedin::before,
+.fa-solid.fa-youtube::before,
+.fa-solid.fa-tiktok::before,
+.fa-solid.fa-discord::before,
+.fa-solid.fa-github::before,
+.fa-solid.fa-whatsapp::before,
+.fa-solid.fa-telegram::before,
+.fa-solid.fa-pinterest::before,
+.fa-solid.fa-dribbble::before,
+.fa-solid.fa-x-twitter::before {
+  font-family: "Font Awesome 6 Brands";
+  font-weight: 400;
+}
+
+.fa-solid.fa-facebook::before { content: "\f09a"; }
+.fa-solid.fa-instagram::before { content: "\f16d"; }
+.fa-solid.fa-linkedin::before { content: "\f08c"; }
+.fa-solid.fa-youtube::before { content: "\f167"; }
+.fa-solid.fa-tiktok::before { content: "\e07b"; }
+.fa-solid.fa-discord::before { content: "\f392"; }
+.fa-solid.fa-github::before { content: "\f09b"; }
+.fa-solid.fa-whatsapp::before { content: "\f232"; }
+.fa-solid.fa-telegram::before { content: "\f2c6"; }
+.fa-solid.fa-pinterest::before { content: "\f0d2"; }
+.fa-solid.fa-dribbble::before { content: "\f17d"; }
+.fa-solid.fa-x-twitter::before { content: "\e61b"; }
