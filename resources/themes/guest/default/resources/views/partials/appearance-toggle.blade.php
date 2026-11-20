@@ -21,7 +21,7 @@
             sync();
             window.addEventListener('theme-mode-changed', (event) => sync(event.detail));
         "
-        class="guest-marketing-action-button inline-flex h-11 items-center gap-1 rounded-full border px-1.5 py-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+        class="guest-marketing-action-button inline-flex h-11 shrink-0 items-center gap-1 rounded-full border px-1.5 py-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
         style="border-color: var(--theme-header-panel-border); background: var(--theme-header-panel-bg);"
     >
         <button

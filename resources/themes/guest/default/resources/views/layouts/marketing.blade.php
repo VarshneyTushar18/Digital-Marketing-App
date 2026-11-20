@@ -114,12 +114,12 @@
                         </span>
                     </a>
 
-                    <nav class="hidden flex-1 justify-center lg:flex">
-                        <div class="guest-marketing-header-nav flex items-center gap-1 rounded-full border border-white/8 bg-white/[0.03] px-2 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+                    <nav class="hidden min-w-0 flex-1 justify-center lg:flex">
+                        <div class="guest-marketing-header-nav flex min-w-0 items-center gap-0.5 rounded-full border border-white/8 bg-white/[0.03] px-1.5 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] lg:gap-1 lg:px-2 xl:px-2">
                             @foreach ($navItems as $item)
                                 <a
                                     href="{{ $item['href'] }}"
-                                    class="rounded-full px-4 py-2 text-sm font-medium transition"
+                                    class="whitespace-nowrap rounded-full px-2 py-1.5 text-xs font-medium transition lg:px-2.5 xl:px-4 xl:py-2 xl:text-sm"
                                     x-bind:class="(() => {
                                         const itemKey = @js($item['key']);
                                         const itemHash = @js($item['hash']);
@@ -135,7 +135,7 @@
                         </div>
                     </nav>
 
-                    <div class="hidden items-center gap-2.5 lg:flex">
+                    <div class="guest-marketing-header-actions hidden shrink-0 items-center gap-2 lg:flex xl:gap-2.5">
                         @include(theme_view('partials.appearance-toggle', 'guest'))
                         @if ($languages->isNotEmpty())
                             @php
@@ -169,11 +169,14 @@
                         @endif
 
                         @auth
-                            <a href="{{ route('portal.dashboard') }}" class="guest-marketing-action-button guest-marketing-dashboard-button inline-flex h-11 items-center rounded-full border border-white/10 bg-white/[0.03] px-5 text-sm font-medium text-white/78 transition hover:bg-white/8 hover:text-white">{{ __('Dashboard') }}</a>
+                            <a href="{{ route('portal.dashboard') }}" class="guest-marketing-action-button guest-marketing-dashboard-button inline-flex h-11 shrink-0 items-center whitespace-nowrap rounded-full border border-white/10 bg-white/[0.03] px-4 text-sm font-medium text-white/78 transition hover:bg-white/8 hover:text-white xl:px-5">{{ __('Dashboard') }}</a>
                         @else
-                            <a href="{{ route('login') }}" class="guest-marketing-action-button inline-flex h-11 items-center rounded-full border border-white/10 bg-white/[0.03] px-5 text-sm font-medium text-white/72 transition hover:bg-white/8 hover:text-white">{{ __('Log in') }}</a>
+                            <a href="{{ route('login') }}" class="guest-marketing-action-button inline-flex h-11 shrink-0 items-center whitespace-nowrap rounded-full border border-white/10 bg-white/[0.03] px-3 text-sm font-medium text-white/72 transition hover:bg-white/8 hover:text-white xl:px-5">{{ __('Log in') }}</a>
                             @if ($signupEnabled)
-                                <a href="{{ route('register') }}" class="guest-marketing-action-button inline-flex h-11 items-center rounded-full px-5 text-sm font-semibold text-white shadow-[0_0_28px_rgba(99,102,241,0.32),0_20px_46px_-24px_rgba(34,211,238,0.45)] transition hover:scale-[1.01]" style="background: linear-gradient(135deg, #8b5cf6 0%, #4f46e5 52%, #22d3ee 100%);">{{ __('Get Started Free') }}</a>
+                                <a href="{{ route('register') }}" class="guest-marketing-action-button guest-marketing-cta inline-flex h-11 shrink-0 items-center whitespace-nowrap rounded-full px-3.5 text-sm font-semibold text-white shadow-[0_0_28px_rgba(99,102,241,0.32),0_20px_46px_-24px_rgba(34,211,238,0.45)] transition hover:scale-[1.01] xl:px-5" style="background: linear-gradient(135deg, #8b5cf6 0%, #4f46e5 52%, #22d3ee 100%);">
+                                    <span class="xl:hidden">{{ __('Get started') }}</span>
+                                    <span class="hidden xl:inline">{{ __('Get Started Free') }}</span>
+                                </a>
                             @endif
                         @endauth
                     </div>

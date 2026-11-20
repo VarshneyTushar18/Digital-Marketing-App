@@ -236,6 +236,21 @@
         box-shadow: 0 10px 24px -18px rgba(15,23,42,0.22), inset 0 1px 0 rgba(255,255,255,0.85) !important;
     }
 
+    .guest-marketing-header-actions .guest-marketing-action-button {
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+
+    .guest-marketing-header-actions .guest-marketing-cta {
+        min-width: max-content;
+    }
+
+    @media (min-width: 1024px) and (max-width: 1279px) {
+        .guest-marketing-header-nav a {
+            letter-spacing: -0.01em;
+        }
+    }
+
     html[data-theme-resolved='light'] .guest-marketing-action-button {
         box-shadow: 0 8px 22px -20px rgba(15, 23, 42, 0.2), inset 0 1px 0 rgba(255,255,255,0.82) !important;
     }
