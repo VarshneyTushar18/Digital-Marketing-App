@@ -27,3 +27,8 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Local dev tooling (cloudflare tunnel, CA bundle)
+/bin/
+/scripts/
+/storage/certs/

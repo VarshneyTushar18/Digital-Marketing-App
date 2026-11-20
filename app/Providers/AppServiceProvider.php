@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Livewire\Livewire;
@@ -52,6 +53,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $this->configureDefaults();
+        $this->configureHttpClientCaBundle();
         $this->configureLivewireAssets();
         $this->configureLivewireMiddleware();
         $this->configureFortifyFeatures();
@@ -63,6 +65,19 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Configure default behaviors for production-ready applications.
      */
+    protected function configureHttpClientCaBundle(): void
+    {
+        $caBundle = storage_path('certs/cacert.pem');
+
+        if (! is_file($caBundle)) {
+            return;
+        }
+
+        Http::globalOptions([
+            'verify' => $caBundle,
+        ]);
+    }
+
     protected function configureDefaults(): void
     {
         Date::use(CarbonImmutable::class);
