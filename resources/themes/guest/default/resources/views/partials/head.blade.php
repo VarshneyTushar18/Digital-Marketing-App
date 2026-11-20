@@ -249,6 +249,10 @@
         .guest-marketing-header-nav a {
             letter-spacing: -0.01em;
         }
+
+        .guest-marketing-header-actions .guest-marketing-cta {
+            letter-spacing: -0.02em;
+        }
     }
 
     html[data-theme-resolved='light'] .guest-marketing-action-button {

@@ -173,10 +173,7 @@
                         @else
                             <a href="{{ route('login') }}" class="guest-marketing-action-button inline-flex h-11 shrink-0 items-center whitespace-nowrap rounded-full border border-white/10 bg-white/[0.03] px-3 text-sm font-medium text-white/72 transition hover:bg-white/8 hover:text-white xl:px-5">{{ __('Log in') }}</a>
                             @if ($signupEnabled)
-                                <a href="{{ route('register') }}" class="guest-marketing-action-button guest-marketing-cta inline-flex h-11 shrink-0 items-center whitespace-nowrap rounded-full px-3.5 text-sm font-semibold text-white shadow-[0_0_28px_rgba(99,102,241,0.32),0_20px_46px_-24px_rgba(34,211,238,0.45)] transition hover:scale-[1.01] xl:px-5" style="background: linear-gradient(135deg, #8b5cf6 0%, #4f46e5 52%, #22d3ee 100%);">
-                                    <span class="xl:hidden">{{ __('Get started') }}</span>
-                                    <span class="hidden xl:inline">{{ __('Get Started Free') }}</span>
-                                </a>
+                                <a href="{{ route('register') }}" class="guest-marketing-action-button guest-marketing-cta inline-flex h-11 shrink-0 items-center whitespace-nowrap rounded-full px-3 text-xs font-semibold tracking-tight text-white shadow-[0_0_28px_rgba(99,102,241,0.32),0_20px_46px_-24px_rgba(34,211,238,0.45)] transition hover:scale-[1.01] xl:px-5 xl:text-sm xl:tracking-normal">{{ __('Get Started Free') }}</a>
                             @endif
                         @endauth
                     </div>
